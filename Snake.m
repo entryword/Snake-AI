@@ -320,6 +320,7 @@ function Snake
                 set(instructionbox,'String','Game paused!')
             end
             %Calculating snake's forward movement
+            snakedir = searchAgent(snakepos, snakedir, foodpos);
             if strcmpi(snakedir,'left')
                 nextmovepos=[snakepos(1,1),snakepos(1,2)-1];
                 truedir='left';
