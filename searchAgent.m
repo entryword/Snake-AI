@@ -1,37 +1,39 @@
-function [ direction ] = searchAgent( snakepos, snakedir, foodpos )
+function [ direction ] = searchAgent( gameState, info )
+% % 
+% gameState.snake.pos : Array of (row,col) represents our snake's body position,
+%   gameState.snake.pos(1) is the head position
+% gameState.snake.dir : String {'up','down','left','right'} represents our snake
+%   direction
+% gameState.snake.win : Boolean value represent whether is win
+% gameState.snake.lose : Boolean value represent whether is lose
+% gameState.rival : Array of structure includes all rival snake information
+% - gameState.rival(i).pos
+% - gameState.rival(i).dir
+% - gameState.rival(i).win
+% - gameState.rival(i).lose
+% gameState.food : Array of structure represents foods
+% - gameState.food(i).pos
+% info.method : String {'miniMax','alphaBeta'}
+% % 
 
-direction = snakedir;
-minDis = inf;
-for i = 1 : size(foodpos,1)
-    dist = norm(snakepos(1,:)-foodpos(i,:), 1);
-    if dist<minDis
-        minDis = dist;
-        minDisIdx = i;
-    end
+if ~isfield(info,'method'), info.method = 'BFS'; end
+switch info.method
+    case 'miniMax'
+        
+    case 'alphaBeta'
 end
 
-if foodpos(minDisIdx,1)-snakepos(1,1)>0
-    if ~strcmp(snakedir,'down')
-        direction = 'up';
-        return
-    end
-elseif foodpos(minDisIdx,1)-snakepos(1,1)<0
-    if ~strcmp(snakedir,'up')
-        direction = 'down';
-        return
-    end
 end
 
-if foodpos(minDisIdx,2)-snakepos(1,2)>0
-    if ~strcmp(snakedir,'left')
-        direction = 'right';
-    end
-elseif foodpos(minDisIdx,2)-snakepos(1,2)<0
-    if ~strcmp(snakedir,'right')
-        direction = 'left';
-    end
+function getLegalActions(gameState, info, idx)
+
 end
 
+function maxValue (gameState, depth)
+    actions = getLegalActions(gameState,1);
+    if depth == 
+end
 
+function minValue ()
 end
 
