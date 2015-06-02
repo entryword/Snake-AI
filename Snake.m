@@ -36,8 +36,8 @@ function Snake
     foodpos=zeros(3,2);
     speedmultiplier=1;
     %defind AI snakes
-    aiSnakeNum = 2;% number of AI snakes
-    aiSnakeColor = [190, 180, 65; 236, 218, 19; 103, 108, 152; 42, 59, 213];
+    aiSnakeNum = 5;% number of AI snakes
+    aiSnakeColor = [190, 180, 65; 236, 218, 19; 103, 108, 152; 42, 59, 213; 96, 47, 47;149, 106, 106;0, 61, 61;0, 138, 138;133, 66, 0;235, 117, 0];
     aiSnakePos = cell(aiSnakeNum,1);
     aiSnakeDir = cell(aiSnakeNum,1);
     aiSnakeTrueDir = cell(aiSnakeNum,1);
@@ -445,13 +445,13 @@ function Snake
                 %Adding new food
                 addstat=1;
                 while size(foodpos,1)<3
-                while addstat==1
-                    foodpos(3,1)=1+round(27*rand);
-                    foodpos(3,2)=1+round(27*rand);
-                    if field(foodpos(3,1),foodpos(3,2))==0
-                        addstat=0;
+                    while addstat==1
+                        foodpos(3,1)=1+round(27*rand);
+                        foodpos(3,2)=1+round(27*rand);
+                        if field(foodpos(3,1),foodpos(3,2))==0
+                            addstat=0;
+                        end
                     end
-                end
                 addstat =1;
                 end
                 addstat = 0;
