@@ -444,7 +444,7 @@ function Snake
                 foodpos = tempFoodPos;
                 %Adding new food
                 addstat=1;
-                while size(foodpos,1)<3
+                
                 while addstat==1
                     foodpos(3,1)=1+round(27*rand);
                     foodpos(3,2)=1+round(27*rand);
@@ -452,9 +452,6 @@ function Snake
                         addstat=0;
                     end
                 end
-                addstat =1;
-                end
-                addstat = 0;
             else
                 growstat=0;
             end
