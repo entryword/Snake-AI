@@ -36,7 +36,7 @@ function Snake
     foodpos=zeros(3,2);
     speedmultiplier=1;
     %defind AI snakes
-    aiSnakeNumTab = 3;
+    aiSnakeNumTab = 5;
     aiSnakeNum = aiSnakeNumTab;% number of AI snakes
     aiSnakeColorTab = [190, 180, 65; 236, 218, 19; 103, 108, 152; 42, 59, 213; 96, 47, 47;149, 106, 106;0, 61, 61;0, 138, 138;133, 66, 0;235, 117, 0];
     aiSnakeColor = aiSnakeColorTab;
