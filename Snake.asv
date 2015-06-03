@@ -484,13 +484,11 @@ function Snake
                     aiGrowStat(count)=[];
                     aiSnakeTrueDir(count)=[];
                     aiSnakeDir(count)=[];
-                    aiSnakePos(count)=[];
+                    %aiSnakePos(count)=[];
                     aiSnakeColor(count*2-1:count*2,:)=[];
                     count = count-1;
                 end
-                disp(count)
-                aiNextMovePos{count}
-                count = count+1;
+                                count = count+1;
             end
             
             %Moving snake forward
