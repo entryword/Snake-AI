@@ -184,7 +184,6 @@ function Snake
             for count = 1:size(aiSnakePos{i},1)
                 aiPos = aiSnakePos{i};
                 if ~((aiPos(count,1)==0)||(aiPos(count,2)==0))            
-                    
                     field(aiPos(count,1),aiPos(count,2))=10+i*2;
                     if count==1
                         field(aiPos(1,1),aiPos(1,2))=10+i*2-1;     
@@ -485,10 +484,10 @@ function Snake
                     aiGrowStat(count)=[];
                     aiSnakeTrueDir(count)=[];
                     aiSnakeDir(count)=[];
+                    %aiSnakePos(count)=[];
                     aiSnakeColor(count*2-1:count*2,:)=[];
                     count = count-1;
                 end
-                count = count+1;
             end
             
             %Moving snake forward

@@ -184,7 +184,6 @@ function Snake
             for count = 1:size(aiSnakePos{i},1)
                 aiPos = aiSnakePos{i};
                 if ~((aiPos(count,1)==0)||(aiPos(count,2)==0))            
-                    
                     field(aiPos(count,1),aiPos(count,2))=10+i*2;
                     if count==1
                         field(aiPos(1,1),aiPos(1,2))=10+i*2-1;     
@@ -465,9 +464,7 @@ function Snake
                         end
                     end
                 addstat =1;
-               end
-                
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+                end
             end
             %Checking snake's forward movement for wall
             if (field(nextmovepos(1),nextmovepos(2))>0)&&...
@@ -483,13 +480,16 @@ function Snake
                 if (field(tempnextmovepos(1),tempnextmovepos(2))>0)&&...
                 (field(tempnextmovepos(1),tempnextmovepos(2))~=5)
                     aiSnakeNum = aiSnakeNum-1;
-                    aiNextMovePos(i)=[];
-                    aiGrowStat(i)=[];
-                    aiSnakeTrueDir(i)=[];
-                    aiSnakeDir(i)=[];
-                    aiSnakeColor(i*2-1:i*2,:)=[];
+                    aiNextMovePos(count)=[];
+                    aiGrowStat(count)=[];
+                    aiSnakeTrueDir(count)=[];
+                    aiSnakeDir(count)=[];
+                    aiSnakePos(count)=[];
+                    aiSnakeColor(count*2-1:count*2,:)=[];
                     count = count-1;
                 end
+                disp(count)
+                aiNextMovePos{count}
                 count = count+1;
             end
             
@@ -504,12 +504,10 @@ function Snake
             end
             for i = 1:aiSnakeNum
                 if aiGrowStat(i)==1
-                    aiSnakePos{i}=[aiNextMovePos{i}; aiSnakePos{i}(1:length(snakepos),:)];
-                    snakescore=snakescore+1;
-                    set(instructionbox,'String','Yummy!')
+                    aiSnakePos{i}=[aiNextMovePos{i}; aiSnakePos{i}(1:length( aiSnakePos{i}),:)];
+
                 else
-                    snakepos=[nextmovepos;snakepos(1:length(snakepos)-1,:)];
-                    set(instructionbox,'String','Watch out for walls!')
+                    aiSnakePos{i}=[aiNextMovePos{i};aiSnakePos{i}(1:length( aiSnakePos{i})-1,:)];
                 end
             end
             
