@@ -140,6 +140,7 @@ end
 function value = evaluationFunction(gameState)
 % % 
 % Return the score of game state of now
+value = -inf;
 
 end
 
