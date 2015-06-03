@@ -1,6 +1,5 @@
 function [ direction ] = searchAgent( gameState, info )
 % % 
-%
 % gameState.self.pos : Array of (row,col) represents our snake's body position,
 %   gameState.self.pos(1) is the head position
 % gameState.self.dir : String {'up','down','left','right'} represents our snake
@@ -14,45 +13,146 @@ function [ direction ] = searchAgent( gameState, info )
 % - gameState.rival(i).lose
 % gameState.food : Array of structure represents foods
 % - gameState.food(i).pos
-% gameState.field
-% -gameState.field.wall
-% -gameState.
+% gameState.wall : Array of structure represents wall
+% - gameState.wall(i).pos
 % info.method : String {'miniMax','alphaBeta'}
+% info.depth : Integer represents tree depth
 % % 
 
-if ~isfield(info,'method'), info.method = 'BFS'; end
+if ~exist('info','var'), info = struct; end
+if ~isfield(info,'method'), info.method = 'miniMax'; end
+if ~isfield(info,'depth'), info.depth = 5; end
 switch info.method
     case 'miniMax'
-        
+        result = maxValue(gameState, info, 0);
     case 'alphaBeta'
 end
+direction = result.action;
 
 end
 
-function getLegalActions(gameState, info, idx)
-
+function result = maxValue (gameState, info, depth)
+actions = getLegalActions(gameState,1);
+if depth == info.depth || isempty(actions)
+    result = struct('value', evaluationFunction(gameState), 'action', gameState.self.dir);
+    return 
 end
-
-function miniMax(gameState, depth, agentIndex)
-    numAgent = 1+lengthg(gameSate.rival);
-    if agentIndex ~= numAgent-1
-        newDepth = depth;
-    else newDepth = depth-1;
+val = -inf;
+act = gameState.self.dir;
+for i = 1 : length(actions)
+    action = actions{i};
+    mState = generateSuccessor(gameState, 1, action);
+    minVal = minValue(mState, info, depth, 2);
+    tVal = minVal.value;
+    if val < tVal
+        val = tVal;
+        act = action;
     end
-    newAgentIndex = mod((agentIndex+1),numAgent);
-    actions = getLegelAction(gameState);
+end
+result = struct('value', val, 'action', act);
 end
 
-function maxValue (gameState, depth)
-    actions = getLegalActions(gameState,1);
-    if depth == 
+function result = minValue (gameState, info, depth, agentNo)
+actions = getLegalActions(gameState, agentNo);
+if isempty(actions)
+    result = struct('value', evaluationFunction(gameState), 'action', '');
+    return
+end
+val = inf;
+for i = 1 : length(actions)
+    action = actions{i};
+    mState = generateSuccessor(gameState, agentNo, action);
+    if agentNo == getNumAgent(gameState)
+        maxVal = maxValue(mState, info, depth+1);
+        tVal = maxVal.value;
+    else
+        minVal = minValue(mState, info, depth, agentNo+1);
+        tVal = minVal.value;
+    end
+    if val > tVal
+        val = tVal;
     end
 end
-
-function minValue ()
+result = struct('value', val, 'action', '');
 end
 
-function eva(gameState)
+function result = maxValueAB (gameState, info, depth, alpha, beta)
+actions = getLegalActions(gameState,1);
+if depth == info.depth || isempty(actions)
+    result = struct('value', evaluationFunction(gameState), 'action', gameState.self.dir);
+    return 
+end
+val = -inf;
+act = gameState.self.dir;
+for i = 1 : length(actions)
+    action = actions{i};
+    mState = generateSuccessor(gameState, 1, action);
+    minVal = minValueAB(mState, info, depth, 2);
+    tVal = minVal.value;
+    if val < tVal
+        val = tVal;
+        act = action;
+    end
+    if val > beta
+        result = struct('value',val,'action',act);
+        return
+    end
+    alpha = max(alpha, val);
+end
+result = struct('value', val, 'action', act);
+end
+
+function result = minValueAB (gameState, info, depth, agentNo, alpha, beta)
+actions = getLegalActions(gameState, agentNo);
+if isempty(actions)
+    result = struct('value', evaluationFunction(gameState), 'action', '');
+    return
+end
+val = inf;
+for i = 1 : length(actions)
+    action = actions{i};
+    mState = generateSuccessor(gameState, agentNo, action);
+    if agentNo == getNumAgent(gameState)
+        maxVal = maxValueAB(mState, info, depth+1);
+        tVal = maxVal.value;
+    else
+        minVal = minValueAB(mState, info, depth, agentNo+1);
+        tVal = minVal.value;
+    end
+    if val > tVal
+        val = tVal;
+    end
+    if val < alpha
+        result = struct('vaule',val,'action','');
+        return
+    end
+    beta = min(beta, val);
+end
+result = struct('value', val, 'action', '');
+end
+
+function actions = getLegalActions(gameState, info, idx)
+% % 
+% Return array of cells include string {'up','down','left','right'}
+
+end
+
+function value = evaluationFunction(gameState)
+% % 
+% Return the score of game state of now
+
+end
+
+function state = generateSuccessor(gameState, agentIndex, action)
+% % 
+% Return the result of game state that after taking action 'action'
+
+end
+
+function numAgents = getNumAgents(gameState)
+% % 
+% Return the number of agents
+numAgents = length(gameState.rival)+1;
 
 end
 
