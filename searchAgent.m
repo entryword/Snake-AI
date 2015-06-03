@@ -15,6 +15,7 @@ function [ direction ] = searchAgent( gameState, info )
 % - gameState.food(i).pos
 % gameState.wall : Array of structure represents wall
 % - gameState.wall(i).pos
+% gameState.size : (row,col) represents field size
 % info.method : String {'miniMax','alphaBeta'}
 % info.depth : Integer represents tree depth
 % % 
@@ -144,10 +145,110 @@ value = -inf;
 
 end
 
-function state = generateSuccessor(gameState, agentIndex, action)
+function state = generateSuccessor(gameState, action)
 % % 
 % Return the result of game state that after taking action 'action'
+state.self.pos = move(gameState.self.pos, action, gameState.size(1), gameState.size(2));
+state.self.dir = gameState.self.dir;
+for i = 1 : length(state.rival)
+    state.rival(i).pos = move(gameState.rival(i).pos, gameState.rival(i).dir, gameState.size(1), gameState.size(2));
+    state.rival(i).dir = gameState.rival(i).dir;
+end
+state.self.lose = 0;
+for i = 1 : length(gameState.rival)
+% %     Self lose - self touch rival
+    for j = 1 : size(gameState.rival(i).pos,1)
+        if sum(gameState.self.pos(1,:)==gameState.rival(i).pos(j,:))==2
+            state.self.lose = 1;
+            break
+        end
+    end
+    if state.self.lose == 1, break; end
+end
+% % Rival lose
+for i = 1 : length(gameState.rival)
+    state.rival(i).lose = 0;
+% %     Rival touch self
+    for j = 1 : size(gameState.self.pos,1)
+        if sum(gameState.rival(i).pos(1,:)==gameState.self.pos(j,:))==2
+            state.rival(i).lose = 1;
+        end
+    end
+    if ~state.rival(i).lose
+% %         Rival touch rival
+        for j = 1 : size(gameState.rival,1)
+            if i~=j
+                for k = 1 : size(gameState.rival(j).pos,1)
+                    if sum(gameState.rival(i).pos(1,:)==gameState.rival(k).pos(k,:))==2
+                        state.rival(i).lose = 1;
+                        break
+                    end
+                end
+            end
+            if state.rival(i).lose == 1, break; end
+        end
+    end
+end
+% % Self win
+state.self.win = 1;
+for i = 1 : length(state.rival)
+    if ~state.rival(i).lose
+        state.self.win = 0;
+        break;
+    end
+end
+% % Rival win
+for i = 1 : length(state.rival)
+    state.rival(i).win = 1;
+% %     Self not lose
+    if ~state.self.lose
+        state.rival(i).win = 0;
+        continue
+    end
+% %     Rival' not lose
+    for j = 1 : length(state.rival)
+        if i~=j && ~state.rival(j).lose
+            state.rival(i).win = 0;
+            break
+        end
+    end
+end
+state.food = [];
+for i = 1 : size(gameState.food,1)
+    if sum(state.self.pos(1,:)==gameState.food(i).pos(1,:))==2
+        continue
+    end
+    flag = 0;
+    for j = 1 : length(state.rival)
+        if sum(state.rival(j).pos(1,:)==gameState.food(i).pos(1,:))==2
+            flag = 1;
+            break
+        end
+    end
+    if ~flag
+        state.food = [state.food gameState.food(i)];
+    end
+end
 
+state.wall = gameState.wall;
+state.size = gameState.size;
+
+end
+
+function result = move(pos, dir, h, w)
+result = [[0 0];pos(1:end-1,:)];
+switch dir
+    case 'up'
+        result(1,:) = pos(1,:)+[1 0];
+    case 'down'
+        result(1,:) = pos(1,:)-[1 0];
+    case 'left'
+        result(1,:) = pos(1,:)-[0 1];
+    case 'right'
+        result(1,:) = pos(1,:)+[0 1];
+end
+result(1,1) = mod(result(1,1),h);
+result(1,2) = mod(result(1,2),w);
 end
 
 function numAgents = getNumAgents(gameState)
