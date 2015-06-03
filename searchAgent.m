@@ -131,7 +131,7 @@ end
 result = struct('value', val, 'action', '');
 end
 
-function actions = getLegalActions(gameState, info, idx)
+function actions = getLegalActions(gameState, info, agentIndex)
 % % 
 % Return array of cells include string {'up','down','left','right'}
 
