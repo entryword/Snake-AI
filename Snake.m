@@ -22,18 +22,20 @@ function Snake
     clear all
 %Declaring global variables
     fieldWidth = 28;
+    foodNum = 3;
     playstat=0;
     pausestat=0;
     quitstat=0;
     field=zeros(28);
     arenaindex=1;
-    gameMode = 1;%1:classic, 2:survival
+    gameModeTab = 1;%1:classic, 2:survival
+    gameMode = gameModeTab;
     snakepos=zeros(8,2);
     snakevel=1;
     snakedir='right';
     truedir='right';
     snakescore=0;
-    foodpos=zeros(3,2);
+    foodpos=zeros(foodNum,2);
     speedmultiplier=1;
     %defind AI snakes
     aiSnakeNumTab = 0;
@@ -56,6 +58,7 @@ function Snake
     aiSnakePosTab(:,2,5) = 24:-1:17;
     aiSnakeDirTab = {'left'; 'right';'right';'left';'right'};
     aiSnakeTrueDirTab = {'left';'down';'down';'down';'right'};
+    snakeLife=zeros(aiSnakeNum+1,1);
 %Defining variables for deffield
     deffield=cell(1,3);
     deffield{1}=zeros(28);
@@ -189,7 +192,8 @@ function Snake
             if ~((foodpos(count,1)==0)||(foodpos(count,2)==0))
                 field(foodpos(count,1),foodpos(count,2))=5;
             end
-        end
+        end    
+        
         for i = 1: aiSnakeNum
             for count = 1:size(aiSnakePos{i},1)
                 aiPos = aiSnakePos{i};
@@ -255,6 +259,8 @@ function Snake
                 graphics(((row-1)*10)+1:((row-1)*10)+10,...
                          ((col-1)*10)+1:((col-1)*10)+10,3)=0;
             end
+            
+            
             if field(row,col)>10 
                 color = aiSnakeColor(field(row,col)-10,:);
                 graphics(((row-1)*10)+1:((row-1)*10)+10,...
@@ -343,10 +349,10 @@ function Snake
 
 %Start of AIagent
     function selectGameMode(~,~)
-        gameMode=get(gameModeSelect,'Value');
+         gameModeTab=get(gameModeSelect,'Value');
         field=generatefieldarray(deffield,snakepos,foodpos);
         drawfield(field)
-        if gameMode ==1
+        if  gameModeTab ==1
             tempstr = 'Classic Mode!';
         else
             tempstr = 'Survival!!!!!';
@@ -386,19 +392,27 @@ function Snake
         aiSnakeDir = aiSnakeDirTab(1:aiSnakeNum);
         aiSnakeTrueDir =aiSnakeTrueDirTab(1:aiSnakeNum);
         aiSnakeColor = aiSnakeColorTab;
+        snakeLife=zeros(aiSnakeNum+1,1);
+        gameMode =gameModeTab;
+        
         %Initiating graphics
         
         field=generatefieldarray(deffield,snakepos,foodpos);
         drawfield(field)
         %Placing initial food
+
         count=1;
         while count<4
             foodpos(count,1)=1+round(27*rand);
-            foodpos(count,2)=1+round(27*rand);
-            if field(foodpos(count,1),foodpos(count,2))==0
+            foodpos(count,2)=1+round(27*rand); 
+            if field(foodpos(count,1),foodpos(count,2))==0                   
                 count=count+1;
             end
         end
+        if gameMode==2
+            snakeLife=ones(aiSnakeNum+1,1); 
+        end
+        growTime=0;
         %Redrawing graphics
         field=generatefieldarray(deffield,snakepos,foodpos);
         drawfield(field)
@@ -410,6 +424,8 @@ function Snake
                 set(instructionbox,'String','Game paused!')
             end
 
+            growTime=growTime+1;
+
             aiNextMovePos= cell(aiSnakeNum,1);
             eatenFood = [];
             addstat=0;
@@ -420,7 +436,11 @@ function Snake
                aiGrowStat = zeros(aiSnakeNum,1);
                tempnextmovepos = aiNextMovePos{i};
                if field(tempnextmovepos(1),tempnextmovepos(2))==5
-                   aiGrowStat(i)=1;
+                   if gameMode ==1
+                       aiGrowStat(i)=1;
+                   else
+                       snakeLife(i+1)=snakeLife(i+1)+1;
+                   end                  
                    eatenFood = [eatenFood;tempnextmovepos ];
                    addstat=1;
                end
@@ -451,11 +471,13 @@ function Snake
                     nextmovepos(1)=1;
                 end
             end
-
-
             %Checking snake's forward movement position for food
             if field(nextmovepos(1),nextmovepos(2))==5
-                growstat=1;
+                if gameMode==1
+                    growstat=1;
+                else
+                    snakeLife(1)=snakeLife(1)+1;
+                end
                 addstat = 1;
                 eatenFood = [eatenFood; nextmovepos];
             else
@@ -491,33 +513,47 @@ function Snake
             %Checking snake's forward movement for wall
             if (field(nextmovepos(1),nextmovepos(2))>0)&&...
                (field(nextmovepos(1),nextmovepos(2))~=5)
+            if snakeLife(1)<1
                 set(instructionbox,'String','Ouch! Game over!')
                 playstat=0;
                 break
+            else
+                snakeLife(1)=snakeLife(1)-1;
+            end
             end
             count = 1;
             while count <= aiSnakeNum
                 tempnextmovepos = aiNextMovePos{count};
-                
                 if (field(tempnextmovepos(1),tempnextmovepos(2))>0)&&...
                 (field(tempnextmovepos(1),tempnextmovepos(2))~=5)
-                    aiSnakeNum = aiSnakeNum-1;
-                    aiNextMovePos(count)=[];
-                    aiGrowStat(count)=[];
-                    aiSnakeTrueDir(count)=[];
-                    aiSnakeDir(count)=[];
-                    aiSnakePos(count)=[];
-                    aiSnakeColor(count*2-1:count*2,:)=[];
-                    count = count-1;
+                    if snakeLife(count+1)<1
+                        aiSnakeNum = aiSnakeNum-1;
+                        aiNextMovePos(count)=[];
+                        aiSnakeTrueDir(count)=[];
+                        aiSnakeDir(count)=[];
+                        aiSnakePos(count)=[];
+                        snakeLife(count+1)=[];
+                        aiGrowStat(count) = [];
+                        aiSnakeColor(count*2-1:count*2,:)=[];
+                        count = count-1;
+                    else
+                        snakeLife(count+1)=snakeLife(count+1)-1;
+                    end
                 end
                 count = count+1;
+            end
+
+            if growTime==2 && gameMode==2
+                growstat=1;
+                aiGrowStat=ones(aiSnakeNum,1);
+                growTime=0;
             end
             
             %Moving snake forward
             if growstat==1
                 snakepos=[nextmovepos;snakepos(1:length(snakepos),:)];
                 snakescore=snakescore+1;
-                set(instructionbox,'String','Yummy!')
+                %set(instructionbox,'String','Yummy!')
             else
                 snakepos=[nextmovepos;snakepos(1:length(snakepos)-1,:)];
                 set(instructionbox,'String','Watch out for walls!')
@@ -525,7 +561,6 @@ function Snake
             for i = 1:aiSnakeNum
                 if aiGrowStat(i)==1
                     aiSnakePos{i}=[aiNextMovePos{i}; aiSnakePos{i}(1:length( aiSnakePos{i}),:)];
-
                 else
                     aiSnakePos{i}=[aiNextMovePos{i};aiSnakePos{i}(1:length( aiSnakePos{i})-1,:)];
                 end
