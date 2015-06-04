@@ -212,7 +212,11 @@ for i = 1 : length(gameState.rival)
         for j = 1 : size(gameState.rival,1)
             if i~=j
                 for k = 1 : size(gameState.rival(j).pos,1)
+<<<<<<< HEAD
                     if sum(gameState.rival(i).pos(1,:)==gameState.rival(j).pos(k,:))==2
+=======
+                    if sum(gameState.rival(i).pos(1,:)==gameState.rival(k).pos(k,:))==2
+>>>>>>> origin/Simple-search-agent
                         state.rival(i).lose = 1;
                         break
                     end
@@ -280,9 +284,13 @@ switch dir
     case 'right'
         result(1,:) = pos(1,:)+[0 1];
 end
+<<<<<<< HEAD
+result(1,1) = mod(result(1,1),h);
+result(1,2) = mod(result(1,2),w);
+=======
 result(1,1) = mod(result(1,1)-1,h)+1;
 result(1,2) = mod(result(1,2)-1,w)+1;
-
+>>>>>>> origin/Simple-search-agent
 end
 
 function numAgents = getNumAgents(gameState)
