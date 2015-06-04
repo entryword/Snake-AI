@@ -247,8 +247,8 @@ switch dir
     case 'right'
         result(1,:) = pos(1,:)+[0 1];
 end
-result(1,1) = mod(result(1,1),h);
-result(1,2) = mod(result(1,2),w);
+result(1,1) = mod(result(1,1)-1,h)+1;
+result(1,2) = mod(result(1,2)-1,w)+1;
 end
 
 function numAgents = getNumAgents(gameState)
