@@ -27,7 +27,7 @@ function Snake
     quitstat=0;
     field=zeros(28);
     arenaindex=1;
-    gameMode = 1;
+    gameMode = 1;%1:classic, 2:survival
     snakepos=zeros(8,2);
     snakevel=1;
     snakedir='right';
