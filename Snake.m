@@ -440,17 +440,20 @@ function Snake
                 gameState.size=[28 28];
                 gameState.self.pos = aiSnakePos{num_snakes};
                 gameState.self.dir = aiSnakeDir{num_snakes};
+                gameState.self.life = snakeLife(num_snakes+1,1);
                 gameState.field = field;
                 gameState.wall = deffield{arenaindex};
                 gameState.rival.num = aiSnakeNum;
                 gameState.rival(1).pos=snakepos;
                 gameState.rival(1).dir=snakedir;
+                gameState.rival(1).life = snakeLife(1,1);
                 num_rival=1;
                 for i = 1:aiSnakeNum
                     if i ~= num_snakes
                         num_rival=num_rival+1;
                         gameState.rival(num_rival).pos=aiSnakePos{i};
                         gameState.rival(num_rival).dir = aiSnakeDir{i};
+                        gameState.rival(num_rival).life = snakeLife(i+1,1);
                     end
                 end
                 for i = 1:foodNum
@@ -461,15 +464,17 @@ function Snake
             %aiSnakeDir = tempAIDir;  
             clear gameState;       
             gameState.size=[28 28];
-            gameState.field =field ;
-             gameState.wall = deffield{arenaindex};
-             gameState.self.pos = snakepos;
-             gameState.self.dir = snakedir;
-             gameState.rival.num = aiSnakeNum;
-             for i = 1:aiSnakeNum
-             gameState.rival(i).pos = aiSnakePos{i};
-             gameState.rival(i).dir = aiSnakeDir{i};
-             end
+            gameState.field =field ; 
+            gameState.wall = deffield{arenaindex};
+            gameState.self.pos = snakepos;
+            gameState.self.dir = snakedir;
+            gameState.self.life = snakeLife(1,1);
+            gameState.rival.num = aiSnakeNum;
+            for i = 1:aiSnakeNum
+                gameState.rival(i).pos = aiSnakePos{i};     
+                gameState.rival(i).dir = aiSnakeDir{i};
+                gameState.rival(i).life = snakeLife(i+1,1);
+            end
              gameState.food.num = foodNum ;    
              for i = 1:foodNum
                     gameState.food(i).pos=foodpos(i,:);
@@ -562,7 +567,7 @@ function Snake
             %Checking snake's forward movement for wall
             if (field(nextmovepos(1),nextmovepos(2))>0)&&...
                (field(nextmovepos(1),nextmovepos(2))~=5)
-            if snakeLife(1)<1
+            if snakeLife(1)<2
                 set(instructionbox,'String','Ouch! Game over!')
                 playstat=0;
                 break
@@ -575,7 +580,7 @@ function Snake
                 tempnextmovepos = aiNextMovePos{count};
                 if (field(tempnextmovepos(1),tempnextmovepos(2))>0)&&...
                 (field(tempnextmovepos(1),tempnextmovepos(2))~=5)
-                    if snakeLife(count+1)<1
+                    if snakeLife(count+1)<2
                         aiSnakeNum = aiSnakeNum-1;
                         aiNextMovePos(count)=[];
                         aiSnakeTrueDir(count)=[];
