@@ -252,22 +252,45 @@ else
     state.rival(agentIndex-1).dir = action;
 end
 
-for i = 1 : length(state.rival)
+% Self touch self
+touch = 0;
+for i = 2 : size(state.self.pos,1)
+    if sum(state.self.pos(1,:)==state.self.pos(i,:))==2
+        state.self.life = state.self.life-1;
+        if state.self.life==0, state.self.lose = 1; end
+        touch = 1;
+        break
+    end
+end
+if ~touch
+    for i = 1 : length(state.rival)
 % %     Self touch rival
-    if ~state.rival(i).lose, continue; end 
+        if ~state.rival(i).lose, continue; end 
+        touch = 0;
+        for j = 1 : size(state.rival(i).pos,1)
+            if sum(state.self.pos(1,:)==state.rival(i).pos(j,:))==2
+                state.self.life = state.self.life-1;
+                if state.self.life==0, state.self.lose = 1; end
+                touch = 1;
+                break
+            end
+        end
+        if touch, break; end
+    end
+end
+
+for i = 1 : length(state.rival)
+% %     Rival touch rival self
     touch = 0;
-    for j = 1 : size(state.rival(i).pos,1)
-        if sum(state.self.pos(1,:)==state.rival(i).pos(j,:))==2
-            state.self.life = state.self.life-1;
-            if state.self.life==0, state.self.lose = 1; end
+    for j = 2 : size(state.rival(i).pos,1)
+        if sum(state.rival(i).pos(1,:)==state.rival(i).pos(j,:))==2
+            state.rival(i).life = state.rival(i).life-1;
+            if state.rival(i).life==0, state.rival(i).lose = 1; end
             touch = 1;
             break
         end
     end
-    if touch, break; end
-end
-
-for i = 1 : length(state.rival)
+    if touch, continue; end
 % %     Rival touch self
     touch = 0;
     for j = 1 : size(state.self.pos,1)
