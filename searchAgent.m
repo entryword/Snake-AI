@@ -2,13 +2,15 @@ function [ direction ] = searchAgent( gameState, info )
 % % 
 % gameState.self.pos : Array of (row,col) represents our snake's body position,
 %   gameState.self.pos(1) is the head position
-% gameState.self.dir : String {'up','down','left','right'} represents our snake
-%   direction
+% gameState.self.dir : String {'up','down','left','right'} represents our
+%   snake's direction
+% gameState.self.life : Integer represents our life
 % gameState.self.win : Boolean value represent whether is win
 % gameState.self.lose : Boolean value represent whether is lose
 % gameState.rival : Array of structure includes all rival snake information
 % - gameState.rival(i).pos
 % - gameState.rival(i).dir
+% - gameState.rival(i).life
 % - gameState.rival(i).win
 % - gameState.rival(i).lose
 % gameState.food : Array of structure represents foods
@@ -27,6 +29,7 @@ switch info.method
     case 'miniMax'
         result = maxValue(gameState, info, 0);
     case 'alphaBeta'
+        result = maxValueAB(gameState, info, 0, -inf, inf);
 end
 direction = result.action;
 
@@ -231,56 +234,56 @@ end
 function state = generateSuccessor(gameState, agentIndex, action)
 % % 
 % Return the result of game state that after taking action 'action'
+state = gameState;
 if agentIndex==1
     state.self.pos = move(gameState.self.pos, action, gameState.size(1), gameState.size(2));
     state.self.dir = action;
-    for i = 1 : length(gameState.rival)
-        state.rival(i) = gameState.rival(i);
-    end
 else
-    state.self.pos = gameState.self.pos;
-    state.self.dir = gameState.self.dir;
-    for i = 1 : length(gameState.rival)
-        if i==agentIndex-1
-            state.rival(i) = move(gameState.rival(i).pos, action, gameState.size(1), gameState.size(2));
-        else
-            state.rival(i) = gameState.rival(i);
-        end
-    end
+    state.rival(agentIndex-1).pos = move(gameState.rival(agentIndex-1).pos, action, gameState.size(1), gameState.size(2));
+    state.rival(agentIndex-1).dir = action;
 end
-state.field = gameState.field;
-state.self.lose = 0;
+
 for i = 1 : length(state.rival)
-% %     Self lose - self touch rival
+% %     Self touch rival
+    if ~state.rival(i).lose, continue; end 
+    touch = 0;
     for j = 1 : size(state.rival(i).pos,1)
         if sum(state.self.pos(1,:)==state.rival(i).pos(j,:))==2
-            state.self.lose = 1;
+            state.self.life = state.self.life-1;
+            if state.self.life==0, state.self.lose = 1; end
+            touch = 1;
             break
         end
     end
-    if state.self.lose == 1, break; end
+    if touch, break; end
 end
-% % Rival lose
+
 for i = 1 : length(state.rival)
-    state.rival(i).lose = 0;
 % %     Rival touch self
+    touch = 0;
     for j = 1 : size(state.self.pos,1)
         if sum(state.rival(i).pos(1,:)==state.self.pos(j,:))==2
-            state.rival(i).lose = 1;
+            state.rival(i).life = state.rival(i).life-1;
+            if state.rival(i).life==0, state.rival(i).lose = 1; end
+            touch = 1;
+            break
         end
     end
-    if ~state.rival(i).lose
+    if ~touch
 % %         Rival touch rival
-        for j = 1 : size(state.rival,1)
+        for j = 1 : length(state.rival)
             if i~=j
+                touch = 0;
                 for k = 1 : size(state.rival(j).pos,1)
                     if sum(state.rival(i).pos(1,:)==state.rival(j).pos(k,:))==2
-                        state.rival(i).lose = 1;
+                        state.rival(i).life = state.rival(i).life-1;
+                        if state.rival(i).life==0, state.rival(i).lose = 1; end
+                        touch = 1;
                         break
                     end
                 end
             end
-            if state.rival(i).lose == 1, break; end
+            if touch, break; end
         end
     end
 end
@@ -310,22 +313,23 @@ for i = 1 : length(state.rival)
 end
 state.food = [];
 for i = 1 : size(gameState.food,1)
+%     If self eat the food, this food doesn't be added to the array
     if sum(state.self.pos(1,:)==gameState.food(i).pos(1,:))==2
         continue
     end
     flag = 0;
+%     If rival eat food
     for j = 1 : length(state.rival)
         if sum(state.rival(j).pos(1,:)==gameState.food(i).pos(1,:))==2
             flag = 1;
             break
         end
     end
+%     No one eat food
     if ~flag
         state.food = [state.food gameState.food(i)];
     end
 end
-state.wall = gameState.wall;
-state.size = gameState.size;
 
 end
 
