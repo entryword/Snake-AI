@@ -21,21 +21,16 @@ function Snake
     close all
     clear all
 %Declaring global variables
-<<<<<<< HEAD
+
     fieldWidth = 28;
     foodNum = 3;
-=======
->>>>>>> origin/Da-Chun
     playstat=0;
     pausestat=0;
     quitstat=0;
     field=zeros(28);
     arenaindex=1;
-<<<<<<< HEAD
     gameModeTab = 1;%1:classic, 2:survival
     gameMode = gameModeTab;
-=======
->>>>>>> origin/Da-Chun
     snakepos=zeros(8,2);
     snakevel=1;
     snakedir='right';
@@ -43,7 +38,7 @@ function Snake
     snakescore=0;
     foodpos=zeros(foodNum,2);
     speedmultiplier=1;
-<<<<<<< HEAD
+
     %defind AI snakes
     aiSnakeNumTab = 0;
     aiSnakeNum = aiSnakeNumTab;% number of AI snakes
@@ -66,9 +61,8 @@ function Snake
     aiSnakeDirTab = {'left'; 'right';'right';'left';'right'};
     aiSnakeTrueDirTab = {'left';'down';'down';'down';'right'};
     snakeLife=zeros(aiSnakeNum+1,1);
-=======
->>>>>>> origin/Da-Chun
-%Defining variables for deffield
+
+    %Defining variables for deffield
     deffield=cell(1,3);
     deffield{1}=zeros(28);
     deffield{2}=zeros(28);
@@ -185,7 +179,6 @@ function Snake
             if ~((foodpos(count,1)==0)||(foodpos(count,2)==0))
                 field(foodpos(count,1),foodpos(count,2))=5;
             end
-<<<<<<< HEAD
         end    
         
         for i = 1: aiSnakeNum
@@ -198,8 +191,6 @@ function Snake
                     end
                 end
             end
-=======
->>>>>>> origin/Da-Chun
         end
     end
     %End of generatefieldarray
@@ -255,8 +246,6 @@ function Snake
                 graphics(((row-1)*10)+1:((row-1)*10)+10,...
                          ((col-1)*10)+1:((col-1)*10)+10,3)=0;
             end
-<<<<<<< HEAD
-            
             
             if field(row,col)>10 
                 color = aiSnakeColor(field(row,col)-10,:);
@@ -266,9 +255,7 @@ function Snake
                          ((col-1)*10)+1:((col-1)*10)+10,2)=color(2);
                 graphics(((row-1)*10)+1:((row-1)*10)+10,...
                          ((col-1)*10)+1:((col-1)*10)+10,3)=color(3);
-            end
-=======
->>>>>>> origin/Da-Chun
+            end 
         end
         end
         %Drawing graphic
@@ -338,7 +325,6 @@ function Snake
         set(instructionbox,'String',['Arena was set to ',...
                                      num2str(arenaindex)])
     end
-<<<<<<< HEAD
     function selectAINumfcn(~,~)
         aiSnakeNumTab=get(aiNum,'Value')-1;
         field=generatefieldarray(deffield,snakepos,foodpos);
@@ -359,8 +345,7 @@ function Snake
         end
         set(instructionbox,'String',tempstr)
     end
-=======
->>>>>>> origin/Da-Chun
+
     %End of selectarenapopup
     %Start of speedsliderfcn
     function movespeedsliderfcn(~,~)
@@ -393,7 +378,7 @@ function Snake
         snakevel=get(speedslider,'Value');
         snakedir='right';
         snakescore=0;
-<<<<<<< HEAD
+
         % initiatin ai snake        
         aiSnakeNum = aiSnakeNumTab;
         for i = 1: aiSnakeNum
@@ -404,9 +389,6 @@ function Snake
         aiSnakeColor = aiSnakeColorTab;
         snakeLife=zeros(aiSnakeNum+1,1);
         gameMode =gameModeTab;
-        
-=======
->>>>>>> origin/Da-Chun
         %Initiating graphics
         field=generatefieldarray(deffield,snakepos,foodpos);
         drawfield(field)
@@ -434,10 +416,8 @@ function Snake
                 pause(0.01)
                 set(instructionbox,'String','Game paused!')
             end
-<<<<<<< HEAD
 
             growTime=growTime+1;
-
             aiNextMovePos= cell(aiSnakeNum,1);
             eatenFood = [];
             addstat=0;
@@ -475,7 +455,8 @@ function Snake
                 truedir='up';
                 if nextmovepos(1)==0
                     nextmovepos(1)=28;
-=======
+                end
+            end
             %Calculating snake's forward movement
             for num_snakes=1:4
                 clear gameState;
@@ -490,13 +471,10 @@ function Snake
                         gameState.rival(num_rival).pos=snakepos(:,:,i);
                         gameState.rival(num_rival).dir=['up','down','left','right'];
                     end
->>>>>>> origin/Da-Chun
                 end
-                
                 for i = 1:3
                     gameState.food(i).pos=foodpos(i,:);
                 end
-<<<<<<< HEAD
             end
             %Checking snake's forward movement position for food
             if field(nextmovepos(1),nextmovepos(2))==5
@@ -512,13 +490,11 @@ function Snake
             end
                 %Deleting eaten food
 
-=======
                 gameState.size=[28 28];
                 info.method='miniMax';
                 info.depth=4;
                 snakedir = searchAgent( gameState, info );
                 
->>>>>>> origin/Da-Chun
 
                 if strcmpi(snakedir,'left')
                     nextmovepos=[snakepos(1,1,num_snakes),snakepos(1,2,num_snakes)-1];
@@ -564,10 +540,9 @@ function Snake
                             addstat=0;
                         end
                     end
-<<<<<<< HEAD
                 addstat =1;
                 end
-            end
+           
             %Checking snake's forward movement for wall
             if (field(nextmovepos(1),nextmovepos(2))>0)&&...
                (field(nextmovepos(1),nextmovepos(2))~=5)
@@ -619,7 +594,6 @@ function Snake
             for i = 1:aiSnakeNum
                 if aiGrowStat(i)==1
                     aiSnakePos{i}=[aiNextMovePos{i}; aiSnakePos{i}(1:length( aiSnakePos{i}),:)];
-=======
                 else
                     growstat=0;
                 end
@@ -637,7 +611,7 @@ function Snake
                     snakepos=[nextmovepos;snakepos(1:length(snakepos),:,num_snakes)];
                     snakescore=snakescore+1;
                     set(instructionbox,'String','Yummy!')
->>>>>>> origin/Da-Chun
+
                 else
                     snakepos=[nextmovepos;snakepos(1:length(snakepos)-1,:,num_snakes)];
                     set(instructionbox,'String','Watch out for walls!')
