@@ -59,6 +59,8 @@ function Snake
     aiSnakeDirTab = {'left'; 'right';'right';'left';'right'};
     aiSnakeTrueDirTab = {'left';'down';'down';'down';'right'};
     snakeLife=zeros(aiSnakeNum+1,1);
+    snakeWin=zeros(aiSnakeNum+1,1);
+    snakeLose=zeros(aiSnakeNum+1,1);
 %Defining variables for deffield
     deffield=cell(1,3);
     deffield{1}=zeros(28);
@@ -392,7 +394,9 @@ function Snake
         aiSnakeDir = aiSnakeDirTab(1:aiSnakeNum);
         aiSnakeTrueDir =aiSnakeTrueDirTab(1:aiSnakeNum);
         aiSnakeColor = aiSnakeColorTab;
-        snakeLife=zeros(aiSnakeNum+1,1);
+        snakeLife=zeros(aiSnakeNum+1,1);          
+        snakeWin=zeros(aiSnakeNum+1,1);   
+        snakeLose=zeros(aiSnakeNum+1,1);
         gameMode =gameModeTab;
         
         %Initiating graphics
@@ -441,12 +445,16 @@ function Snake
                 gameState.self.pos = aiSnakePos{num_snakes};
                 gameState.self.dir = aiSnakeDir{num_snakes};
                 gameState.self.life = snakeLife(num_snakes+1,1);
+                gameState.self.win = snakeWin(num_snakes+1,1);
+                gameState.self.lose = snakeLose(num_snakes+1,1);
                 gameState.field = field;
                 gameState.wall = deffield{arenaindex};
                 gameState.rival.num = aiSnakeNum;
                 gameState.rival(1).pos=snakepos;
                 gameState.rival(1).dir=snakedir;
                 gameState.rival(1).life = snakeLife(1,1);
+                gameState.rival(1).win = snakeWin(1,1);
+                gameState.rival(1).lose = snakeLose(1,1);
                 num_rival=1;
                 for i = 1:aiSnakeNum
                     if i ~= num_snakes
@@ -454,6 +462,8 @@ function Snake
                         gameState.rival(num_rival).pos=aiSnakePos{i};
                         gameState.rival(num_rival).dir = aiSnakeDir{i};
                         gameState.rival(num_rival).life = snakeLife(i+1,1);
+                        gameState.rival(num_rival).win = snakeWin(i+1,1);
+                        gameState.rival(num_rival).lose = snakeLose(i+1,1);
                     end
                 end
                 for i = 1:foodNum
@@ -461,7 +471,8 @@ function Snake
                 end
                 tempAIDir{num_snakes} = searchAgent( gameState, info );          
             end
-           aiSnakeDir = tempAIDir;  
+            
+            aiSnakeDir = tempAIDir;
             clear gameState;       
             gameState.size=[28 28];
             gameState.field =field ; 
@@ -469,11 +480,15 @@ function Snake
             gameState.self.pos = snakepos;
             gameState.self.dir = snakedir;
             gameState.self.life = snakeLife(1,1);
+            gameState.self.win = snakeWin(1,1);
+            gameState.self.lose = snakeLose(1,1);
             gameState.rival.num = aiSnakeNum;
             for i = 1:aiSnakeNum
                 gameState.rival(i).pos = aiSnakePos{i};     
                 gameState.rival(i).dir = aiSnakeDir{i};
                 gameState.rival(i).life = snakeLife(i+1,1);
+                gameState.rival(i).win = snakeWin(i+1,1);
+                gameState.rival(i).lose = snakeLose(i+1,1);
             end
              gameState.food.num = foodNum ;    
              for i = 1:foodNum
@@ -587,6 +602,8 @@ function Snake
                         aiSnakeDir(count)=[];
                         aiSnakePos(count)=[];
                         snakeLife(count+1)=[];
+                        snakeWin(count+1)=[];   
+                        snakeLose(count+1)=[]; 
                         aiGrowStat(count) = [];
                         aiSnakeColor(count*2-1:count*2,:)=[];
                         count = count-1;
