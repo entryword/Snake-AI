@@ -459,9 +459,9 @@ function Snake
                 for i = 1:foodNum
                     gameState.food(i).pos=foodpos(i,:);
                 end
-                %tempAIDir{num_snakes} = searchAgent( gameState, info );          
+                tempAIDir{num_snakes} = searchAgent( gameState, info );          
             end
-            %aiSnakeDir = tempAIDir;  
+           aiSnakeDir = tempAIDir;  
             clear gameState;       
             gameState.size=[28 28];
             gameState.field =field ; 
@@ -480,7 +480,7 @@ function Snake
                     gameState.food(i).pos=foodpos(i,:);
              end
              
-             %snakedir = searchAgent( gameState, info );
+             snakedir = searchAgent( gameState, info );
             
             %snake move
             for i = 1:aiSnakeNum
