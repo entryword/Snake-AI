@@ -430,31 +430,54 @@ function Snake
             eatenFood = [];
             addstat=0;
             
-            for num_snakes=1:4
+            % set Interface      and decide next moves
+            info.method='miniMax';     
+            info.depth=4;
+            
+            tempAIDir = aiSnakeDir;
+            for num_snakes=1:aiSnakeNum
                 clear gameState;
-                gameState.self.pos=snakepos(:,:,num_snakes);
-                gameState.self.dir=['up','down','left','right'];
-                gameState.field=field;
-                gameState.wall=[];
-                num_rival=0;
-                for i= 1:4
+                gameState.size=[28 28];
+                gameState.self.pos = aiSnakePos{num_snakes};
+                gameState.self.dir = aiSnakeDir{num_snakes};
+                gameState.field = field;
+                gameState.wall = deffield{arenaindex};
+                gameState.rival.num = aiSnakeNum;
+                gameState.rival(1).pos=snakepos;
+                gameState.rival(1).dir=snakedir;
+                num_rival=1;
+                for i = 1:aiSnakeNum
                     if i ~= num_snakes
                         num_rival=num_rival+1;
-                        gameState.rival(num_rival).pos=snakepos(:,:,i);
-                        gameState.rival(num_rival).dir=['up','down','left','right'];
+                        gameState.rival(num_rival).pos=aiSnakePos{i};
+                        gameState.rival(num_rival).dir = aiSnakeDir{i};
                     end
                 end
-                for i = 1:3
+                for i = 1:foodNum
                     gameState.food(i).pos=foodpos(i,:);
                 end
+                %tempAIDir{num_snakes} = searchAgent( gameState, info );          
             end
-                          
-             gameState.size=[28 28];
-             info.method='miniMax';
-             info.depth=4;
-             snakedir = searchAgent( gameState, info );
+            %aiSnakeDir = tempAIDir;  
+            clear gameState;       
+            gameState.size=[28 28];
+            gameState.field =field ;
+             gameState.wall = deffield{arenaindex};
+             gameState.self.pos = snakepos;
+             gameState.self.dir = snakedir;
+             gameState.rival.num = aiSnakeNum;
+             for i = 1:aiSnakeNum
+             gameState.rival(i).pos = aiSnakePos{i};
+             gameState.rival(i).dir = aiSnakeDir{i};
+             end
+             gameState.food.num = foodNum ;    
+             for i = 1:foodNum
+                    gameState.food(i).pos=foodpos(i,:);
+             end
+             
+             %snakedir = searchAgent( gameState, info );
             
-            
+            %snake move
             for i = 1:aiSnakeNum
                tempPos=aiSnakePos{i};
                tempDir = aiSnakeDir{i};
