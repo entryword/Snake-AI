@@ -21,15 +21,21 @@ function Snake
     close all
     clear all
 %Declaring global variables
+<<<<<<< HEAD
     fieldWidth = 28;
     foodNum = 3;
+=======
+>>>>>>> origin/Da-Chun
     playstat=0;
     pausestat=0;
     quitstat=0;
     field=zeros(28);
     arenaindex=1;
+<<<<<<< HEAD
     gameModeTab = 1;%1:classic, 2:survival
     gameMode = gameModeTab;
+=======
+>>>>>>> origin/Da-Chun
     snakepos=zeros(8,2);
     snakevel=1;
     snakedir='right';
@@ -37,6 +43,7 @@ function Snake
     snakescore=0;
     foodpos=zeros(foodNum,2);
     speedmultiplier=1;
+<<<<<<< HEAD
     %defind AI snakes
     aiSnakeNumTab = 0;
     aiSnakeNum = aiSnakeNumTab;% number of AI snakes
@@ -59,6 +66,8 @@ function Snake
     aiSnakeDirTab = {'left'; 'right';'right';'left';'right'};
     aiSnakeTrueDirTab = {'left';'down';'down';'down';'right'};
     snakeLife=zeros(aiSnakeNum+1,1);
+=======
+>>>>>>> origin/Da-Chun
 %Defining variables for deffield
     deffield=cell(1,3);
     deffield{1}=zeros(28);
@@ -74,20 +83,20 @@ function Snake
     deffield{4}(29:-6:1,28:-1:9)=9;
 %Generating GUI
     ScreenSize=get(0,'ScreenSize');
-    mainwindow=figure('Name','AI¤j³D¤Y',...
+    mainwindow=figure('Name','Snake',...
                       'NumberTitle','Off',...
                       'Menubar','none',...
                       'Resize','off',...
                       'Units','pixels',...
                       'Position',[0.5*(ScreenSize(3)-384),...
-                                  0.5*(ScreenSize(4)-430),...
-                                  384,430],...
+                                  0.5*(ScreenSize(4)-400),...
+                                  384,400],...
                       'WindowKeyPressFcn',@pressfcn,...
                       'WindowKeyReleaseFcn',@releasefcn,...
                       'DeleteFcn',@closegamefcn);
     axes('Parent',mainwindow,...
          'Units','pixel',...
-         'Position',[52,130,280,280]);
+         'Position',[52,100,280,280]);
     lscoretext=uicontrol('Parent',mainwindow,...
                          'Style','text',...
                          'String','0',...
@@ -111,26 +120,8 @@ function Snake
                                    'Track Field',...
                                    'Puzzle'},...
                          'Units','normalized',...
-                         'Position',[0.46,0.25,0.17,0.025],...
+                         'Position',[0.4,0.2,0.2,0.025],...
                          'Callback',@selectarenapopupfcn);
-    aiNum=uicontrol('Parent',mainwindow,...
-                         'Style','popup',...
-                         'String',{'0',...
-                                   '1',...
-                                   '2',...
-                                   '3',...
-                                   '4',...
-                                   '5'},...
-                         'Units','normalized',...
-                         'Position',[0.64,0.225,0.1,0.05],...
-                         'Callback',@selectAINumfcn);
-    gameModeSelect=uicontrol('Parent',mainwindow,...
-             'Style','popup',...
-             'String',{'Classic',...
-                       'Survival'},...
-             'Units','normalized',...
-             'Position',[0.28,0.25,0.17,0.025],...
-             'Callback',@selectGameMode);
     speedslider=uicontrol('Parent',mainwindow,...
                           'Style','slider',...
                           'Value',1,...
@@ -138,7 +129,7 @@ function Snake
                           'Max',100,...
                           'SliderStep',[1/99,2/99],...
                           'Units','normalized',...
-                          'Position',[0.375,0.155,0.25,0.03],...
+                          'Position',[0.375,0.13,0.25,0.03],...
                           'Callback',@movespeedsliderfcn);
     speedtext=uicontrol('Parent',mainwindow,...
                         'Style','text',...
@@ -146,26 +137,26 @@ function Snake
                         'HorizontalAlignment','center',...
                         'BackgroundColor',[0.8,0.8,0.8],...
                         'Units','normalized',...
-                        'Position',[0.475,0.12,0.05,0.03]);
+                        'Position',[0.475,0.1,0.05,0.03]);
     startbutton=uicontrol('Parent',mainwindow,...
                           'Style','pushbutton',...
                           'String','Start Game',...
                           'Visible','on',...
                           'Units','normalized',...
-                          'Position',[0.12,0.15,0.2,0.05],...
+                          'Position',[0.15,0.15,0.2,0.05],...
                           'Callback',@startgamefcn);
     stopbutton=uicontrol('Parent',mainwindow,...
                          'Style','pushbutton',...
                          'String','Stop Game',...
                          'Visible','off',...
                          'Units','normalized',...
-                         'Position',[0.12,0.15,0.2,0.05],...
+                         'Position',[0.15,0.15,0.2,0.05],...
                          'Callback',@stopgamefcn);
     uicontrol('Parent',mainwindow,...
               'Style','pushbutton',...
               'String','Close Game',...
               'Units','normalized',...
-              'Position',[0.67,0.15,0.2,0.05],...
+              'Position',[0.65,0.15,0.2,0.05],...
               'Callback',@closegamefcn);
     instructionbox=uicontrol('Parent',mainwindow,...
                              'Style','text',...
@@ -180,11 +171,13 @@ function Snake
     %Start of generatefieldarray
     function field=generatefieldarray(deffield,snakepos,foodpos)
         field=deffield{arenaindex};
-        for count=1:length(snakepos)
-            if ~((snakepos(count,1)==0)||(snakepos(count,2)==0))
-                field(snakepos(count,1),snakepos(count,2))=1;
-                if count==1
-                    field(snakepos(1,1),snakepos(1,2))=2;
+        for i=1:4
+            for count=1:length(snakepos(:,:,i))
+                if ~((snakepos(count,1,i)==0)||(snakepos(count,2,i)==0))
+                    field(snakepos(count,1,i),snakepos(count,2,i))=1;
+                    if count==1
+                        field(snakepos(1,1,i),snakepos(1,2,i))=2;
+                    end
                 end
             end
         end
@@ -192,6 +185,7 @@ function Snake
             if ~((foodpos(count,1)==0)||(foodpos(count,2)==0))
                 field(foodpos(count,1),foodpos(count,2))=5;
             end
+<<<<<<< HEAD
         end    
         
         for i = 1: aiSnakeNum
@@ -204,6 +198,8 @@ function Snake
                     end
                 end
             end
+=======
+>>>>>>> origin/Da-Chun
         end
     end
     %End of generatefieldarray
@@ -259,6 +255,7 @@ function Snake
                 graphics(((row-1)*10)+1:((row-1)*10)+10,...
                          ((col-1)*10)+1:((col-1)*10)+10,3)=0;
             end
+<<<<<<< HEAD
             
             
             if field(row,col)>10 
@@ -270,6 +267,8 @@ function Snake
                 graphics(((row-1)*10)+1:((row-1)*10)+10,...
                          ((col-1)*10)+1:((col-1)*10)+10,3)=color(3);
             end
+=======
+>>>>>>> origin/Da-Chun
         end
         end
         %Drawing graphic
@@ -339,6 +338,7 @@ function Snake
         set(instructionbox,'String',['Arena was set to ',...
                                      num2str(arenaindex)])
     end
+<<<<<<< HEAD
     function selectAINumfcn(~,~)
         aiSnakeNumTab=get(aiNum,'Value')-1;
         field=generatefieldarray(deffield,snakepos,foodpos);
@@ -359,6 +359,8 @@ function Snake
         end
         set(instructionbox,'String',tempstr)
     end
+=======
+>>>>>>> origin/Da-Chun
     %End of selectarenapopup
     %Start of speedsliderfcn
     function movespeedsliderfcn(~,~)
@@ -371,6 +373,7 @@ function Snake
     %End of speedsliderfcn
     %Start of startgamefcn
     function startgamefcn(~,~)
+        clc
         %Locking user interface
         set(startbutton,'Visible','off')
         set(stopbutton,'Visible','on')
@@ -378,12 +381,19 @@ function Snake
         set(speedslider,'Enable','off')
         %Resetting variables
         playstat=1;
-        snakepos=zeros(8,2);
-        snakepos(:,1)=25;
-        snakepos(:,2)=15:-1:8;
+        snakepos=zeros(8,2,4);
+        snakepos(:,1,1)=25;
+        snakepos(:,2,1)=15:-1:8;
+        snakepos(:,1,2)=8:15;
+        snakepos(:,2,2)=25;
+        snakepos(:,1,3)=5;
+        snakepos(:,2,3)=8:15;
+        snakepos(:,1,4)=15:-1:8;
+        snakepos(:,2,4)=5;
         snakevel=get(speedslider,'Value');
         snakedir='right';
         snakescore=0;
+<<<<<<< HEAD
         % initiatin ai snake        
         aiSnakeNum = aiSnakeNumTab;
         for i = 1: aiSnakeNum
@@ -395,8 +405,9 @@ function Snake
         snakeLife=zeros(aiSnakeNum+1,1);
         gameMode =gameModeTab;
         
+=======
+>>>>>>> origin/Da-Chun
         %Initiating graphics
-        
         field=generatefieldarray(deffield,snakepos,foodpos);
         drawfield(field)
         %Placing initial food
@@ -423,6 +434,7 @@ function Snake
                 pause(0.01)
                 set(instructionbox,'String','Game paused!')
             end
+<<<<<<< HEAD
 
             growTime=growTime+1;
 
@@ -463,13 +475,28 @@ function Snake
                 truedir='up';
                 if nextmovepos(1)==0
                     nextmovepos(1)=28;
+=======
+            %Calculating snake's forward movement
+            for num_snakes=1:4
+                clear gameState;
+                gameState.self.pos=snakepos(:,:,num_snakes);
+                gameState.self.dir=['up','down','left','right'];
+                gameState.field=field;
+                gameState.wall=[];
+                num_rival=0;
+                for i= 1:4
+                    if i ~= num_snakes
+                        num_rival=num_rival+1;
+                        gameState.rival(num_rival).pos=snakepos(:,:,i);
+                        gameState.rival(num_rival).dir=['up','down','left','right'];
+                    end
+>>>>>>> origin/Da-Chun
                 end
-            elseif strcmpi(snakedir,'down')
-                nextmovepos=[snakepos(1,1)+1,snakepos(1,2)];
-                truedir='down';
-                if nextmovepos(1)==29
-                    nextmovepos(1)=1;
+                
+                for i = 1:3
+                    gameState.food(i).pos=foodpos(i,:);
                 end
+<<<<<<< HEAD
             end
             %Checking snake's forward movement position for food
             if field(nextmovepos(1),nextmovepos(2))==5
@@ -485,21 +512,51 @@ function Snake
             end
                 %Deleting eaten food
 
+=======
+                gameState.size=[28 28];
+                info.method='miniMax';
+                info.depth=4;
+                snakedir = searchAgent( gameState, info );
+                
+>>>>>>> origin/Da-Chun
 
-            if addstat ==1
-                tempFoodPos = [];
-                for count=1:3
-                    for countF = 1:size(eatenFood,1)
-                        if ~isequal(eatenFood(countF,:),foodpos(count,:))
-                            tempFoodPos = [tempFoodPos;foodpos(count,:)];
-                            %break
-                        end
+                if strcmpi(snakedir,'left')
+                    nextmovepos=[snakepos(1,1,num_snakes),snakepos(1,2,num_snakes)-1];
+                    truedir='left';
+                    if nextmovepos(2)==0
+                        nextmovepos(2)=28;
+                    end
+                elseif strcmpi(snakedir,'right')
+                    nextmovepos=[snakepos(1,1,num_snakes),snakepos(1,2,num_snakes)+1];
+                    truedir='right';
+                    if nextmovepos(2)==29
+                        nextmovepos(2)=1;
+                    end
+                elseif strcmpi(snakedir,'up')
+                    nextmovepos=[snakepos(1,1,num_snakes)-1,snakepos(1,2,num_snakes)];
+                    truedir='up';
+                    if nextmovepos(1)==0
+                        nextmovepos(1)=28;
+                    end
+                elseif strcmpi(snakedir,'down')
+                    nextmovepos=[snakepos(1,1,num_snakes)+1,snakepos(1,2,num_snakes)];
+                    truedir='down';
+                    if nextmovepos(1)==29
+                        nextmovepos(1)=1;
                     end
                 end
-                foodpos = tempFoodPos;
-                %Adding new food
-                addstat=1;
-                while size(foodpos,1)<3
+                %Checking snake's forward movement position for food
+                if field(nextmovepos(1),nextmovepos(2))==5
+                    growstat=1;
+                    %Deleting eaten food
+                    for count=1:3
+                        if isequal(nextmovepos,foodpos(count,:))
+                            foodpos(count,:)=[];
+                            break
+                        end
+                    end
+                    %Adding new food
+                    addstat=1;
                     while addstat==1
                         foodpos(3,1)=1+round(27*rand);
                         foodpos(3,2)=1+round(27*rand);
@@ -507,6 +564,7 @@ function Snake
                             addstat=0;
                         end
                     end
+<<<<<<< HEAD
                 addstat =1;
                 end
             end
@@ -561,18 +619,39 @@ function Snake
             for i = 1:aiSnakeNum
                 if aiGrowStat(i)==1
                     aiSnakePos{i}=[aiNextMovePos{i}; aiSnakePos{i}(1:length( aiSnakePos{i}),:)];
+=======
                 else
-                    aiSnakePos{i}=[aiNextMovePos{i};aiSnakePos{i}(1:length( aiSnakePos{i})-1,:)];
+                    growstat=0;
                 end
+
+
+                %Checking snake's forward movement for wall
+                if (field(nextmovepos(1),nextmovepos(2))==1)||...
+                   (field(nextmovepos(1),nextmovepos(2))==9)
+                    set(instructionbox,'String','Ouch! Game over!')
+                    playstat=0;
+                    break
+                end
+                %Moving snake forward
+                if growstat==1
+                    snakepos=[nextmovepos;snakepos(1:length(snakepos),:,num_snakes)];
+                    snakescore=snakescore+1;
+                    set(instructionbox,'String','Yummy!')
+>>>>>>> origin/Da-Chun
+                else
+                    snakepos=[nextmovepos;snakepos(1:length(snakepos)-1,:,num_snakes)];
+                    set(instructionbox,'String','Watch out for walls!')
+                end
+                %Updating graphics
+                field=generatefieldarray(deffield,snakepos,foodpos);
+                drawfield(field)
+                %Performing delay
+                set(lscoretext,'String',num2str(snakescore))
+                set(rscoretext,'String',num2str(snakescore))
+                pause(0.1/(speedmultiplier*snakevel))
+            
             end
             
-            %Updating graphics
-            field=generatefieldarray(deffield,snakepos,foodpos);
-            drawfield(field)
-            %Performing delay
-            set(lscoretext,'String',num2str(snakescore))
-            set(rscoretext,'String',num2str(snakescore))
-            pause(0.1/(speedmultiplier*snakevel))
         end
         %Unlocking user interface
         if quitstat==0
@@ -584,35 +663,6 @@ function Snake
     end
     %End of startgamefcn
     %Start of stopgamefcn
-    
-    function [nextmovepos,tempTrueDir]  = cekNextMove(tempPos,tempDir)
-        if strcmpi(tempDir,'left')
-                nextmovepos=[tempPos(1,1),tempPos(1,2)-1];
-                tempTrueDir='left';
-                if nextmovepos(2)==0
-                    nextmovepos(2)=28;
-                end
-            elseif strcmpi(tempDir,'right')
-                nextmovepos=[tempPos(1,1),tempPos(1,2)+1];
-                tempTrueDir='right';
-                if nextmovepos(2)==29
-                    nextmovepos(2)=1;
-                end
-            elseif strcmpi(tempDir,'up')
-                nextmovepos=[tempPos(1,1)-1,tempPos(1,2)];
-                tempTrueDir='up';
-                if nextmovepos(1)==0
-                    nextmovepos(1)=28;
-                end
-            elseif strcmpi(tempDir,'down')
-                nextmovepos=[tempPos(1,1)+1,tempPos(1,2)];
-                tempTrueDir='down';
-                if nextmovepos(1)==29
-                    nextmovepos(1)=1;
-                end
-        end
-    end
-    
     function stopgamefcn(~,~)
         %Stopping game loop
         playstat=0;
