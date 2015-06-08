@@ -34,14 +34,23 @@ end
 
 function result = maxValue (gameState, info, depth)
 
-actions = getLegalActions(gameState,info,1);
-if depth == info.depth || isempty(actions)
+if depth == info.depth
     result = struct('value', evaluationFunction(gameState), 'action', gameState.self.dir);
     return 
 end
+switch gameState.self.dir
+    case 'up'
+        actions = {'up' 'left' 'right'};
+    case 'down'
+        actions = {'down' 'left' 'right'};
+    case 'left'
+        actions = {'up' 'down' 'left'};
+    case 'right'
+        actions = {'up' 'down' 'right'};
+end
 val = -inf;
 act = gameState.self.dir;
-for i = 1 : length(actions)
+for i = 1 : 3
     action = actions{i};
     mState = generateSuccessor(gameState, 1, action);
     minVal = minValue(mState, info, depth, 2);
@@ -55,13 +64,19 @@ result = struct('value', val, 'action', act);
 end
 
 function result = minValue (gameState, info, depth, agentNo)
-actions = getLegalActions(gameState,info ,agentNo);
-if isempty(actions)
-    result = struct('value', evaluationFunction(gameState), 'action', '');
-    return
+
+switch gameState.rival(agentNo-1).dir
+    case 'up'
+        actions = {'up' 'left' 'right'};
+    case 'down'
+        actions = {'down' 'left' 'right'};
+    case 'left'
+        actions = {'up' 'down' 'left'};
+    case 'right'
+        actions = {'up' 'down' 'right'};
 end
 val = inf;
-for i = 1 : length(actions)
+for i = 1 : 3
     action = actions{i};
     mState = generateSuccessor(gameState, agentNo, action);
     if agentNo == getNumAgents(gameState)
@@ -76,17 +91,28 @@ for i = 1 : length(actions)
     end
 end
 result = struct('value', val, 'action', '');
+
 end
 
 function result = maxValueAB (gameState, info, depth, alpha, beta)
-actions = getLegalActions(gameState,info,1);
-if depth == info.depth || isempty(actions)
+
+if depth == info.depth
     result = struct('value', evaluationFunction(gameState), 'action', gameState.self.dir);
     return 
 end
+switch gameState.self.dir
+    case 'up'
+        actions = {'up' 'left' 'right'};
+    case 'down'
+        actions = {'down' 'left' 'right'};
+    case 'left'
+        actions = {'up' 'down' 'left'};
+    case 'right'
+        actions = {'up' 'down' 'right'};
+end
 val = -inf;
 act = gameState.self.dir;
-for i = 1 : length(actions)
+for i = 1 : 3
     action = actions{i};
     mState = generateSuccessor(gameState, 1, action);
     minVal = minValueAB(mState, info, depth, 2);
@@ -105,13 +131,19 @@ result = struct('value', val, 'action', act);
 end
 
 function result = minValueAB (gameState, info, depth, agentNo, alpha, beta)
-actions = getLegalActions(gameState, info,agentNo);
-if isempty(actions)
-    result = struct('value', evaluationFunction(gameState), 'action', '');
-    return
+
+switch gameState.rival(agentNo-1).dir
+    case 'up'
+        actions = {'up' 'left' 'right'};
+    case 'down'
+        actions = {'down' 'left' 'right'};
+    case 'left'
+        actions = {'up' 'down' 'left'};
+    case 'right'
+        actions = {'up' 'down' 'right'};
 end
 val = inf;
-for i = 1 : length(actions)
+for i = 1 : 3
     action = actions{i};
     mState = generateSuccessor(gameState, agentNo, action);
     if agentNo == getNumAgents(gameState)
@@ -133,66 +165,95 @@ end
 result = struct('value', val, 'action', '');
 end
 
-function actions = getLegalActions(gameState, info, agentIndex)
-% % 
-% Return array of cells include string {'up','down','left','right'}
-if agentIndex == 1 
-    snakehead=gameState.self.pos(1,:);
-else
-    snakehead=gameState.rival(agentIndex-1).pos(1,:);
-end
-x=snakehead(1);
-y=snakehead(2);
-up_x=mod(x-2,28)+1;
-up_y=y;
-num_dir=0;
-if(gameState.field(up_x,up_y)==0)
-    num_dir=num_dir+1;
-    actions{num_dir}='up';
-end
-down_x=mod(x,28)+1;
-down_y=y;
-if(gameState.field(down_x,down_y)==0)
-    num_dir=num_dir+1;
-    actions{num_dir}='down';
-end
-left_x=x;
-left_y=mod(y-2,28)+1;
-if(gameState.field(left_x,left_y)==0)
-    num_dir=num_dir+1;
-    actions{num_dir}='left';
-end
-right_x=x;
-right_y=mod(y,28)+1;
-if(gameState.field(right_x,right_y)==0)
-    num_dir=num_dir+1;
-    actions{num_dir}='right';
-end
-
-end
+% function actions = getLegalActions(gameState, info, agentIndex)
+% % % 
+% % Return array of cells include string {'up','down','left','right'}
+% if agentIndex == 1 
+%     snakehead=gameState.self.pos(1,:);
+% else
+%     snakehead=gameState.rival(agentIndex-1).pos(1,:);
+% end
+% x=snakehead(1);
+% y=snakehead(2);
+% up_x=mod(x-2,28)+1;
+% up_y=y;
+% num_dir=0;
+% if(gameState.field(up_x,up_y)==0)
+%     num_dir=num_dir+1;
+%     actions{num_dir}='up';
+% end
+% down_x=mod(x,28)+1;
+% down_y=y;
+% if(gameState.field(down_x,down_y)==0)
+%     num_dir=num_dir+1;
+%     actions{num_dir}='down';
+% end
+% left_x=x;
+% left_y=mod(y-2,28)+1;
+% if(gameState.field(left_x,left_y)==0)
+%     num_dir=num_dir+1;
+%     actions{num_dir}='left';
+% end
+% right_x=x;
+% right_y=mod(y,28)+1;
+% if(gameState.field(right_x,right_y)==0)
+%     num_dir=num_dir+1;
+%     actions{num_dir}='right';
+% end
+% 
+% end
 
 function value = evaluationFunction(gameState)
 % % 
 % Return the score of game state of now
-value = -inf;
+if self.lose, value = -inf;
+elseif self.win, value = inf;
+else
+    value = 0;
+    for i = 1 : length(gameState.rival)
+        for j = 1 : length(gameState.rival(i).pos)
+            x = gameState.self.pos(j,2)-gameState.rival(i).pos(j,2);
+            y = gameState.self.pos(j,1)-gameState.rival(i).pos(j,1);
+            dist2 = x*x+y*y;
+            value = value-1/dist2;
+        end
+    end
+    for i = 1 : length(gameState.food)
+        x = gameState.self.pos(j,2)-gameState.food(i).pos(i,2);
+        y = gameState.self.pos(j,1)-gameState.food(i).pos(j,1);
+        dist2 = x*x+y*y;
+        value = value+1/dist2;
+    end
+end
 
 end
 
-function state = generateSuccessor(gameState, agentIndex,action)
+function state = generateSuccessor(gameState, agentIndex, action)
 % % 
 % Return the result of game state that after taking action 'action'
-state.field = gameState.field;
-state.self.pos = move(gameState.self.pos, action, gameState.size(1), gameState.size(2));
-state.self.dir = gameState.self.dir;
-for i = 1 : length(gameState.rival)
-    state.rival(i).pos = move(gameState.rival(i).pos, gameState.rival(i).dir, gameState.size(1), gameState.size(2));
-    state.rival(i).dir = gameState.rival(i).dir;
+if agentIndex==1
+    state.self.pos = move(gameState.self.pos, action, gameState.size(1), gameState.size(2));
+    state.self.dir = action;
+    for i = 1 : length(gameState.rival)
+        state.rival(i) = gameState.rival(i);
+    end
+else
+    state.self.pos = gameState.self.pos;
+    state.self.dir = gameState.self.dir;
+    for i = 1 : length(gameState.rival)
+        if i==agentIndex-1
+            state.rival(i) = move(gameState.rival(i).pos, action, gameState.size(1), gameState.size(2));
+        else
+            state.rival(i) = gameState.rival(i);
+        end
+    end
 end
+state.field = gameState.field;
 state.self.lose = 0;
-for i = 1 : length(gameState.rival)
+for i = 1 : length(state.rival)
 % %     Self lose - self touch rival
-    for j = 1 : size(gameState.rival(i).pos,1)
-        if sum(gameState.self.pos(1,:)==gameState.rival(i).pos(j,:))==2
+    for j = 1 : size(state.rival(i).pos,1)
+        if sum(state.self.pos(1,:)==state.rival(i).pos(j,:))==2
             state.self.lose = 1;
             break
         end
@@ -200,20 +261,20 @@ for i = 1 : length(gameState.rival)
     if state.self.lose == 1, break; end
 end
 % % Rival lose
-for i = 1 : length(gameState.rival)
+for i = 1 : length(state.rival)
     state.rival(i).lose = 0;
 % %     Rival touch self
-    for j = 1 : size(gameState.self.pos,1)
-        if sum(gameState.rival(i).pos(1,:)==gameState.self.pos(j,:))==2
+    for j = 1 : size(state.self.pos,1)
+        if sum(state.rival(i).pos(1,:)==state.self.pos(j,:))==2
             state.rival(i).lose = 1;
         end
     end
     if ~state.rival(i).lose
 % %         Rival touch rival
-        for j = 1 : size(gameState.rival,1)
+        for j = 1 : size(state.rival,1)
             if i~=j
-                for k = 1 : size(gameState.rival(j).pos,1)
-                    if sum(gameState.rival(i).pos(1,:)==gameState.rival(j).pos(k,:))==2
+                for k = 1 : size(state.rival(j).pos,1)
+                    if sum(state.rival(i).pos(1,:)==state.rival(j).pos(k,:))==2
                         state.rival(i).lose = 1;
                         break
                     end
@@ -239,7 +300,7 @@ for i = 1 : length(state.rival)
         state.rival(i).win = 0;
         continue
     end
-% %     Rival' not lose
+% %     Rival not lose
     for j = 1 : length(state.rival)
         if i~=j && ~state.rival(j).lose
             state.rival(i).win = 0;
@@ -263,7 +324,6 @@ for i = 1 : size(gameState.food,1)
         state.food = [state.food gameState.food(i)];
     end
 end
-
 state.wall = gameState.wall;
 state.size = gameState.size;
 
