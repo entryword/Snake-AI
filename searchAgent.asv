@@ -218,7 +218,6 @@ else
             x = gameState.self.pos(j,2)-gameState.rival(i).pos(j,2);
             y = gameState.self.pos(j,1)-gameState.rival(i).pos(j,1);
             dist2 = x*x+y*y;
-            if dist2
             value = value-1/dist2;
         end
     end
@@ -236,6 +235,9 @@ function state = generateSuccessor(gameState, agentIndex, action)
 % % 
 % Return the result of game state that after taking action 'action'
 state = gameState;
+state.self
+state.rival(i)
+pause
 if agentIndex==1
     state.self.pos = move(gameState.self.pos, action, gameState.size(1), gameState.size(2));
     state.self.dir = action;

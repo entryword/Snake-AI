@@ -31,12 +31,16 @@ switch info.method
     case 'alphaBeta'
         result = maxValueAB(gameState, info, 0, -inf, inf);
 end
+% disp('finish')
+% pause
 direction = result.action;
 
 end
 
 function result = maxValue (gameState, info, depth)
-
+% disp('maxV')
+% depth
+% pause
 if depth == info.depth
     result = struct('value', evaluationFunction(gameState), 'action', gameState.self.dir);
     return 
@@ -67,7 +71,9 @@ result = struct('value', val, 'action', act);
 end
 
 function result = minValue (gameState, info, depth, agentNo)
-
+% disp('minV')
+% agentNo
+% pause
 switch gameState.rival(agentNo-1).dir
     case 'up'
         actions = {'up' 'left' 'right'};
@@ -209,21 +215,22 @@ end
 function value = evaluationFunction(gameState)
 % % 
 % Return the score of game state of now
-if self.lose, value = -inf;
-elseif self.win, value = inf;
+% disp('eva')
+if gameState.self.lose, value = -inf;
+elseif gameState.self.win, value = inf;
 else
     value = 0;
     for i = 1 : length(gameState.rival)
         for j = 1 : length(gameState.rival(i).pos)
-            x = gameState.self.pos(j,2)-gameState.rival(i).pos(j,2);
-            y = gameState.self.pos(j,1)-gameState.rival(i).pos(j,1);
+            x = gameState.self.pos(1,2)-gameState.rival(i).pos(j,2);
+            y = gameState.self.pos(1,1)-gameState.rival(i).pos(j,1);
             dist2 = x*x+y*y;
             value = value-1/dist2;
         end
     end
     for i = 1 : length(gameState.food)
-        x = gameState.self.pos(j,2)-gameState.food(i).pos(i,2);
-        y = gameState.self.pos(j,1)-gameState.food(i).pos(j,1);
+        x = gameState.self.pos(1,2)-gameState.food(i).pos(2);
+        y = gameState.self.pos(1,1)-gameState.food(i).pos(1);
         dist2 = x*x+y*y;
         value = value+1/dist2;
     end
@@ -234,6 +241,8 @@ end
 function state = generateSuccessor(gameState, agentIndex, action)
 % % 
 % Return the result of game state that after taking action 'action'
+% disp('gen')
+% pause
 state = gameState;
 if agentIndex==1
     state.self.pos = move(gameState.self.pos, action, gameState.size(1), gameState.size(2));

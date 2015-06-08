@@ -436,7 +436,7 @@ function Snake
             
             % set Interface      and decide next moves
             info.method='miniMax';     
-            info.depth=4;
+            info.depth=2;
             
             tempAIDir = aiSnakeDir;
             for num_snakes=1:aiSnakeNum
