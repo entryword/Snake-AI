@@ -1,0 +1,11 @@
+function [ result ] = isCollideFood( field, headPos )
+
+result = 0;
+for i = 1 : size(headPos,1)
+    if field(headPos(i,1),headPos(i,2))==5
+        result = 1;
+    end
+end
+
+end
+
