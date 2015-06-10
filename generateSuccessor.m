@@ -7,16 +7,22 @@ state = gameState;
 state.time = gameState.time+1;
 for i = 1 : length(gameState.snake)
     if ~gameState.snake(i).lose
-        state.snake(i).pos = move(gameState.snake(i).pos,action{i},gameState.size(1),gameState.size(2), ~mod(state.time,info.growTime));
+        if ~mod(state.time,info.growTime), state.snake(i).grow = 1; end
+        state.snake(i).pos = move(gameState.snake(i).pos,action{i},gameState.size(1),gameState.size(2), state.snake(i).grow);
         state.snake(i).dir = action{i};
+        state.snake(i).grow = 0;
     end
 end 
-for i = 1 : length(gameState.snake)
-    if ~gameState.snake(i).lose && isCollideFood(gameState.field, gameState.snake(i).pos(1,:))
+for i = 1 : length(state.snake)
+    if ~state.snake(i).lose && isCollideFood(gameState.field, state.snake(i).pos(1,:))
         for j = 1 : size(state.food,1)
             if sum(state.food(j,:)==state.snake(i).pos(1,:))==2
                 state.food(j,:) = [];
-                state.snake(i).life = state.snake(i).life+1;
+                if gameState.gameMode == 1
+                    state.snake(i).grow = 1;
+                else
+                    state.snake(i).life = state.snake(i).life+1;
+                end
                 break
             end
         end

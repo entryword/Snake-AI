@@ -68,15 +68,15 @@ snakeAction = cell(1,length(gameState.snake));
 for i = 1 : length(gameState.snake)
     snakeAction{i} = gameState.snake(i).dir;
 end
-nextAgentNo = mod(idx,length(gameState.snake))+1;
 for i = 1 : 3
     snakeAction{idx} = actions{i};
     mState = generateSuccessor(gameState, snakeAction, info);
-    minVal = minValue(mState, idx, info, depth, nextAgentNo);
+    agentNo = mod(idx,length(gameState.snake))+1;
+    minVal = minValue(mState, idx, info, depth, agentNo);
     tVal = minVal.value;
     if val < tVal
         val = tVal;
-        act = actions{i};
+        act = action;
     end
 end
 result = struct('value', val, 'action', act);
@@ -150,12 +150,12 @@ for i = 1 : 3
     snakeAction{idx} = actions{i};
     mState = generateSuccessor(gameState, snakeAction, info);
     disp(['enter min i=', num2str(i)])
-%     pause
+    pause
     minVal = minValueAB(mState, idx, info, depth, nextAgentNo, alpha, beta);
     tVal = minVal.value;
     if val < tVal
         val = tVal;
-        act = actions{i};
+        act = action;
     end
     if val > beta
         result = struct('value',val,'action',act);
@@ -191,12 +191,12 @@ for i = 1 : 3
     mState = generateSuccessor(gameState, snakeAction, info);
     if nextAgentNo == idx
         disp(['enter max i=', num2str(i)])
-%         pause
+        pause
         maxVal = maxValueAB(mState, idx, info, depth+1, alpha, beta);
         tVal = maxVal.value;
     else
         disp(['enter min i=', num2str(i)])
-%         pause
+        pause
         minVal = minValueAB(mState, idx, info, depth, nextAgentNo, alpha, beta);
         tVal = minVal.value;
     end

@@ -1,6 +1,0 @@
-function [ result ] = isCollideObstacle( filed, nextHeadPos )
-
-result = filed(nextHeadPos)==
-
-end
-

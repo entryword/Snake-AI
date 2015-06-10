@@ -6,9 +6,9 @@ else
 end
 switch dir
     case 'up'
-        result(1,:) = pos(1,:)+[1 0];
-    case 'down'
         result(1,:) = pos(1,:)-[1 0];
+    case 'down'
+        result(1,:) = pos(1,:)+[1 0];
     case 'left'
         result(1,:) = pos(1,:)-[0 1];
     case 'right'
