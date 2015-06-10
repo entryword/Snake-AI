@@ -31,8 +31,8 @@ function Snake
     arenaindex=1;
     gameModeTab = 1;%1:classic, 2:survival
     gameState = struct;
-    info.method = 'miniMax';     
-    info.depth = 1;
+    info.method = 'alphaBeta';     
+    info.depth = 2;
     info.growTime = 5;
     keyDir = 'none';
 % % % % % %   

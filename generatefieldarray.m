@@ -13,7 +13,7 @@ if isfield(gameState,'snake')
     end
 end
 if isfield(gameState,'food')
-    for i = 1 : length(gameState.food)
+    for i = 1 : size(gameState.food,1)
         field(gameState.food(i,1),gameState.food(i,2)) = 5;
     end   
 end
