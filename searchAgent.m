@@ -33,7 +33,7 @@ end
 function result = maxValue (gameState, idx, info, depth)
 
 if depth == info.depth
-    result = struct('value', evaluationFunction(gameState,idx), 'action', gameState.snake(idx).dir);
+    result = struct('value', evaluationFunction(gameState,idx , info.evluFuc), 'action', gameState.snake(idx).dir);
     return 
 end
 switch gameState.snake(idx).dir
@@ -105,7 +105,7 @@ end
 function result = maxValueAB (gameState, idx, info, depth, alpha, beta)
 
 if depth == info.depth
-    result = struct('value', evaluationFunction(gameState,idx), 'action', gameState.snake(idx).dir);
+    result = struct('value', evaluationFunction(gameState,idx , info.evluFuc), 'action', gameState.snake(idx).dir);
     return 
 end
 switch gameState.snake(idx).dir
@@ -185,31 +185,59 @@ result = struct('value', val, 'action', '');
 
 end
 
-function value = evaluationFunction(gameState, idx)
+function value = evaluationFunction(gameState, idx ,evluFuc)
 % % 
 % Return the score of game state of now
-
-if gameState.snake(idx).lose, value = -inf;
-elseif gameState.snake(idx).win, value = inf;
-else
-    value = 0;
-    for i = 1 : length(gameState.snake)
-        if i==idx, continue; end
-        for j = 1 : length(gameState.snake(i).pos)
-            x = gameState.snake(idx).pos(1,2)-gameState.snake(i).pos(j,2);
-            y = gameState.snake(idx).pos(1,1)-gameState.snake(i).pos(j,1);
-            dist2 = x*x+y*y;
-            value = value-1/dist2;
+switch evluFuc
+    case 1
+        if gameState.snake(idx).lose, value = -inf;
+        elseif gameState.snake(idx).win, value = inf;
+        else
+            value = 0;
+            for i = 1 : length(gameState.snake)
+                if i==idx, continue; end
+                for j = 1 : length(gameState.snake(i).pos)
+                    x = gameState.snake(idx).pos(1,2)-gameState.snake(i).pos(j,2);
+                    y = gameState.snake(idx).pos(1,1)-gameState.snake(i).pos(j,1);
+                    dist2 = x*x+y*y;
+                    value = value-1/dist2;
+                end
+            end
+            for i = 1 : size(gameState.food,1)
+                x = gameState.snake(idx).pos(1,2)-gameState.food(i,2);
+                y = gameState.snake(idx).pos(1,1)-gameState.food(i,1);
+                dist2 = x*x+y*y;
+                value = value+100/dist2;
+            end
         end
-    end
-    for i = 1 : size(gameState.food,1)
-        x = gameState.snake(idx).pos(1,2)-gameState.food(i,2);
-        y = gameState.snake(idx).pos(1,1)-gameState.food(i,1);
-        dist2 = x*x+y*y;
-        value = value+100/dist2;
-    end
+    case 2
+        if gameState.snake(idx).lose, value = -inf;
+        elseif gameState.snake(idx).win, value = inf;
+        else
+            value = 0;
+            for i = 1 : length(gameState.snake)
+                if i==idx, continue; end
+                for j = 1 : length(gameState.snake(i).pos)
+                    x = gameState.snake(idx).pos(1,2)-gameState.snake(i).pos(j,2);
+                    y = gameState.snake(idx).pos(1,1)-gameState.snake(i).pos(j,1);
+                    dist2 = x*x+y*y;
+                    value = value-1/dist2;
+                end
+            end
+            for i = 1 : size(gameState.food,1)
+                x = gameState.snake(idx).pos(1,2)-gameState.food(i,2);
+                y = gameState.snake(idx).pos(1,1)-gameState.food(i,1);
+                dist2 = x*x+y*y;
+                value = value+100/dist2;
+            end
+        end
+        
+    case 3
+        value = 100;
+        
+    case 4
+        value = 100;
 end
-
 end
 
 
