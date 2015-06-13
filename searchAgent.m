@@ -25,9 +25,40 @@ switch info.method
         result = maxValue(gameState, idx, info, 0);
     case 'alphaBeta'
         result = maxValueAB(gameState, idx, info, 0, -inf, inf);
+    case 'Monte-Carlo'
+        result = MonteCarlo(gameState, idx, info);
 end
 direction = result.action;
 
+end
+
+function result = MonteCarlo(gameState, idx, info)
+    scores = zeros(1,3);
+    startDir = getLegalAction(gameState.snake(idx).dir);
+    states = {gameState, gameState, gameState};
+    tic
+    while toc < 0.1/length(gameState.snake)
+        nowDir = startDir;
+        for i = 1 : 3
+            for j = 1 : info.depth
+                nextAct = cell(1,length(gameState.snake));
+                for k = 1 : length(gameState.snake)
+                    if k ~= idx
+                        tmpActs = getLegalAction(gameState.snake(k).dir);
+                        nextAct{k} = tmpActs{randi(3)};
+                    else
+                        nextAct{k} = nowDir{i};
+                        tmpActs = getLegalAction(nowDir{i});
+                        nowDir{i} = tmpActs{randi(3)};
+                    end
+                end
+                states{i} = generateSuccessor(states{i},nextAct,info);
+                scores(i) = scores(i) + sigmf(evaluationFunction(states{i},idx),[1 0]);
+            end
+        end
+    end
+    [~, maxIdx] = max(scores);
+    result.action = startDir{maxIdx};
 end
 
 function result = maxValue (gameState, idx, info, depth)
