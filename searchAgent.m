@@ -256,7 +256,7 @@ switch evluFuc
         for i = 1 : size(gameState.food,1)
                 x = abs(gameState.snake(idx).pos(1,2)-gameState.food(i,2));
                 y = abs(gameState.snake(idx).pos(1,1)-gameState.food(i,1));
-                dist2 = min(x+y,dist2);        
+                dist2 = min(x+y,dist2);
         end
         value = value+lifeVal/dist2;
         
@@ -271,7 +271,7 @@ switch evluFuc
             end
         end
 
-       
+        value =value+gameState.snake(idx).life*10000;
     case 3
         value = 100;
         
