@@ -37,7 +37,7 @@ function result = MonteCarlo(gameState, idx, info)
     startDir = getLegalAction(gameState.snake(idx).dir);
     states = {gameState, gameState, gameState};
     tic
-    while toc < 0.1/length(gameState.snake)
+    while toc < 0.2/length(gameState.snake)
         nowDir = startDir;
         for i = 1 : 3
             for j = 1 : info.depth
@@ -370,7 +370,25 @@ switch evluFuc
         value =value+gameState.snake(idx).life*10000;
         
     case 4
-        value = 100;
+        value = 0;               
+        if gameState.snake(idx).lose
+            value = -inf;
+            return;
+        elseif gameState.snake(idx).win
+            value = inf;
+            return;
+        end
+        lifeVal=200;
+        dist2=3000;
+        for i = 1 : size(gameState.food,1)
+                x = min(abs(gameState.snake(idx).pos(1,2)-gameState.food(i,2))...
+                    ,gameState.size(1)-abs(gameState.snake(idx).pos(1,2)-gameState.food(i,2)));
+                y = min(abs(gameState.snake(idx).pos(1,1)-gameState.food(i,1))...
+                    ,gameState.size(2)-abs(gameState.snake(idx).pos(1,1)-gameState.food(i,1)));
+                dist2 = min(x+y,dist2);
+        end
+        value = value+lifeVal/dist2;
+        value =value+gameState.snake(idx).life*10000;
 end
 end
 
