@@ -31,16 +31,17 @@ function Snake
     arenaindex=1;
     gameModeTab = 1;%1:classic, 2:survival
     gameState = struct;
-    info.method = 'Monte-Carlo'; 
-%     info.method = 'alphaBeta'; 
+%     info.method = 'Monte-Carlo'; 
+    info.method = 'alphaBeta'; 
 %     info.method = 'miniMax';
-    info.depth = 10;
+    info.depth = 2;
     info.growTime = 5;
     keyDir = 'none';
 % % % % % %   
     %defind AI snakes
     aiSnakeNumTab = 0;
     aiSnakeNum = aiSnakeNumTab+1;% number of AI snakes
+    PlayByMySelfTab = 1;
 %Defining variables for deffield
     deffield=cell(1,3);
     deffield{1}=zeros(28);
@@ -78,14 +79,14 @@ function Snake
     %                     'BackgroundColor',[0.8,0.8,0.8],...
     %                     'Units','pixels',...
     %                     'Position',[10,220,40,40]);
-    rscoretext=uicontrol('Parent',mainwindow,...
-                         'Style','text',...
-                         'String','0',...
-                         'FontSize',15,...
-                         'HorizontalAlignment','center',...
-                         'BackgroundColor',[0.8,0.8,0.8],...
-                         'Units','pixels',...
-                         'Position',[334,220,70,100]);
+%     rscoretext=uicontrol('Parent',mainwindow,...
+%                          'Style','text',...
+%                          'String','0',...
+%                          'FontSize',15,...
+%                          'HorizontalAlignment','center',...
+%                          'BackgroundColor',[0.8,0.8,0.8],...
+%                          'Units','pixels',...
+%                          'Position',[334,220,70,100]);
     arenapopup=uicontrol('Parent',mainwindow,...
                          'Style','popup',...
                          'String',{'Infinite',...
@@ -106,6 +107,13 @@ function Snake
                          'Units','normalized',...
                          'Position',[0.54,0.225,0.1,0.05],...
                          'Callback',@selectAINumfcn);
+     playmyself=uicontrol('Parent',mainwindow,...
+                     'Style','popup',...
+                     'String',{'Myself',...
+                               'AI Demo'},...
+                     'Units','normalized',...
+                     'Position',[0.65,0.225,0.15,0.05],...
+                     'Callback',@selectIfPlay);
     gameModeSelect=uicontrol('Parent',mainwindow,...
              'Style','popup',...
              'String',{'Classic',...
@@ -289,6 +297,10 @@ function Snake
                                      num2str(aiSnakeNumTab),' AI Snakes'])
     end
 
+    function selectIfPlay(~,~)
+        PlayByMySelfTab = get(playmyself,'Value');
+    end
+
 %Start of AIagent
     function selectGameMode(~,~)
         gameModeTab=get(gameModeSelect,'Value');
@@ -324,7 +336,19 @@ function Snake
         gameState.size = [28 28];
         aiSnakeNum = aiSnakeNumTab+1;
         snakescore = zeros(1,aiSnakeNum);
-        for i = 1 : aiSnakeNum
+        rscoretext2 = cell(aiSnakeNum,1);
+        PlayByMySelf = PlayByMySelfTab;
+        for i = 1 : aiSnakeNum                 
+            color = snakeColor(i);
+            rscoretext2{i}=uicontrol('Parent',mainwindow,...
+                     'Style','text',...
+                     'String','0',...
+                     'FontSize',15,...
+                     'HorizontalAlignment','center',...
+                     'BackgroundColor',[0.8,0.8,0.8],...
+                     'ForegroundColor',color(1,:)./280,...
+                     'Units','pixels',...
+                     'Position',[334,300-30*i,100,100]); 
             [pos, dir] = snakeInitTable(i);
             gameState.snake(i).pos = pos;
             gameState.snake(i).dir = dir;
@@ -359,17 +383,19 @@ function Snake
                 set(instructionbox,'String','Game paused!')
             end
             gameState.time = gameState.time+1;
-%             aiNextMovePos= cell(aiSnakeNum,1);
 
             % set Interface      and decide next moves
             snakedir = cell(1,aiSnakeNum);
             for i = 1 : aiSnakeNum
-                if i==1 && ~strcmp(keyDir,'none')
+                if PlayByMySelf==1&&    i==1
+                                        
+                    snakedir{1} = keyDir;
+                   % keyDir = 'none';
+                elseif i==1 && ~strcmp(keyDir,'none')
                     snakedir{1} = keyDir;
                     keyDir = 'none';
                 else
                   snakedir{i} = searchAgent( gameState, i, info );
-%                     snakedir{i} = gameState.snake(i).dir;
                 end
             end
 
@@ -395,7 +421,14 @@ function Snake
 
             %Moving snake forward
             for i = 1 : aiSnakeNum
-                snakescore(i) = snakescore(i) + size(gameState.snake(i).pos,1);
+                if gameState.snake(i).lose==1
+%                     snakescore(i) =snakescore(i);
+                else
+                    snakescore(i) = size(gameState.snake(i).pos,1);
+                end
+                str = [num2str(snakescore(i)), '/',num2str(gameState.snake(i).life)];
+               set(rscoretext2{i},'String',str)
+%                 set(rscoretext2{i},'String',num2str(snakescore(i)))
             end
     
             %Updating graphics
@@ -404,7 +437,7 @@ function Snake
             gameState.time = gameState.time+1;
             %Performing delay
            % set(lscoretext,'String',num2str(snakescore))
-            set(rscoretext,'String',num2str(snakescore))
+%             set(rscoretext,'String',num2str(snakescore))
             pause(0.1/(speedmultiplier*snakevel))
         end
         %Unlocking user interface
