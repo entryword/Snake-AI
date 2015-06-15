@@ -387,12 +387,12 @@ function Snake
             % set Interface      and decide next moves
             snakedir = cell(1,aiSnakeNum);
             for i = 1 : aiSnakeNum
-                if PlayByMySelf==1&&    i==1
-                                        
-                    snakedir{1} = keyDir;
-                   % keyDir = 'none';
-                elseif i==1 && ~strcmp(keyDir,'none')
-                    snakedir{1} = keyDir;
+                if PlayByMySelf==1 && i==1
+                    if ~strcmp(keyDir,'none')
+                        snakedir{1} = keyDir;
+                    else
+                        snakedir{1} = gameState.snake(1).dir;
+                    end
                     keyDir = 'none';
                 else
                   snakedir{i} = searchAgent( gameState, i, info );
