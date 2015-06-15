@@ -53,7 +53,9 @@ function result = MonteCarlo(gameState, idx, info)
                     end
                 end
                 states{i} = generateSuccessor(states{i},nextAct,info);
-                scores(i) = scores(i) + sigmf(evaluationFunction(states{i},idx),[1 0]);
+                scores(i) = scores(i) + 1/(1+exp(-1*(evaluationFunction(states{i},idx))));
+%                 scores(i) = scores(i) +
+%                 sigmf(evaluationFunction(states{i},idx),[1 0]);
             end
         end
     end

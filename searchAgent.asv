@@ -53,7 +53,9 @@ function result = MonteCarlo(gameState, idx, info)
                     end
                 end
                 states{i} = generateSuccessor(states{i},nextAct,info);
-                scores(i) = scores(i) + sigmf(evaluationFunction(states{i},idx),[1 0]);
+                scores(i) = scores(i) + 1/(1+exp(evaluationFunction(states{i},idx)));
+%                 scores(i) = scores(i) +
+%                 sigmf(evaluationFunction(states{i},idx),[1 0]);
             end
         end
     end
@@ -219,7 +221,7 @@ end
 function value = evaluationFunction(gameState, idx)
 % % 
 % Return the score of game state of now
-evluFuc=4;
+evluFuc=3;
 
 switch evluFuc
     case 1
@@ -379,7 +381,7 @@ switch evluFuc
             return;
         end
         lifeVal=200;
-        dist2=30
+        dist2=3000;
         for i = 1 : size(gameState.food,1)
                 x = min(abs(gameState.snake(idx).pos(1,2)-gameState.food(i,2))...
                     ,gameState.size(1)-abs(gameState.snake(idx).pos(1,2)-gameState.food(i,2)));
