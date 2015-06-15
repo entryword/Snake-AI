@@ -221,7 +221,7 @@ end
 function value = evaluationFunction(gameState, idx)
 % % 
 % Return the score of game state of now
-evluFuc=3;
+evluFuc=4;
 
 switch evluFuc
     case 1
@@ -380,7 +380,7 @@ switch evluFuc
             value = inf;
             return;
         end
-        lifeVal=200;
+        lifeVal=500;
         dist2=3000;
         for i = 1 : size(gameState.food,1)
                 x = min(abs(gameState.snake(idx).pos(1,2)-gameState.food(i,2))...
@@ -390,7 +390,18 @@ switch evluFuc
                 dist2 = min(x+y,dist2);
         end
         value = value+lifeVal/dist2;
-        value =value+gameState.snake(idx).life*10000;
+        value =value+gameState.snake(idx).life*100000;
+        
+    case 5 %very simple for monte carlo   
+        value = 0;               
+        if gameState.snake(idx).lose
+            value = -inf;
+            return;
+        elseif gameState.snake(idx).win
+            value = inf;
+            return;
+        end
+        
 end
 end
 

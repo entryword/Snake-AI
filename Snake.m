@@ -31,10 +31,10 @@ function Snake
     arenaindex=1;
     gameModeTab = 1;%1:classic, 2:survival
     gameState = struct;
-%     info.method = 'Monte-Carlo'; 
-    info.method = 'alphaBeta'; 
+    info.method = 'Monte-Carlo'; 
+%     info.method = 'alphaBeta'; 
 %     info.method = 'miniMax';
-    info.depth = 2;
+    info.depth = 10;
     info.growTime = 5;
     keyDir = 'none';
 % % % % % %   
