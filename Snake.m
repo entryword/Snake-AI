@@ -338,6 +338,10 @@ function Snake
         snakescore = zeros(1,aiSnakeNum);
         rscoretext2 = cell(aiSnakeNum,1);
         PlayByMySelf = PlayByMySelfTab;
+        
+        if PlayByMySelf ==1
+            keyDir = 'right';
+        end
         for i = 1 : aiSnakeNum                 
             color = snakeColor(i);
             rscoretext2{i}=uicontrol('Parent',mainwindow,...
