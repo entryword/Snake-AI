@@ -32,8 +32,11 @@ function Snake
     gameModeTab = 1;%1:classic, 2:survival
     gameState = struct;
 %     info.method = 'Monte-Carlo'; 
-    info.method = 'alphaBeta'; 
+%     info.method = 'alphaBeta'; 
 %     info.method = 'miniMax';
+%     info.method = 'Monte-Carlo-1';
+%     method = {'miniMax', 'alphaBeta', 'Monte-Carlo-1', 'Monte-Carlo-2', 'Monte-Carlo-3', 'Monte-Carlo-4'};
+    method = {'Monte-Carlo-1', 'Monte-Carlo-2', 'Monte-Carlo-3', 'Monte-Carlo-4', 'Monte-Carlo-1', 'Monte-Carlo-1'};
     info.depth = 2;
     info.growTime = 5;
     keyDir = 'none';
@@ -395,7 +398,8 @@ function Snake
                     end
                     keyDir = 'none';
                 else
-                  snakedir{i} = searchAgent( gameState, i, info );
+                    info.method = method{i};
+                    snakedir{i} = searchAgent( gameState, i, info );
                 end
             end
 

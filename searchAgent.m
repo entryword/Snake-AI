@@ -26,7 +26,25 @@ switch info.method
     case 'alphaBeta'
         result = maxValueAB(gameState, idx, info, 0, -inf, inf);
     case 'Monte-Carlo'
+        info.computingTime = 0.1/length(gameState.snake);
         result = MonteCarlo(gameState, idx, info);
+    case 'Monte-Carlo-1'
+        info.computingTime = 0.1;
+        result = MonteCarlo(gameState, idx, info);
+    case 'Monte-Carlo-2'
+        info.computingTime = 0.2;
+        result = MonteCarlo(gameState, idx, info);
+    case 'Monte-Carlo-3'
+        info.computingTime = 0.3;
+        result = MonteCarlo(gameState, idx, info);   
+    case 'Monte-Carlo-4'
+        info.computingTime = 0.4;
+        result = MonteCarlo(gameState, idx, info);
+    case 'Monte-Carlo-5'
+        info.computingTime = 0.5;
+        result = MonteCarlo(gameState, idx, info);
+    otherwise
+        error('Unknown method!')
 end
 direction = result.action;
 
@@ -37,7 +55,7 @@ function result = MonteCarlo(gameState, idx, info)
     startDir = getLegalAction(gameState.snake(idx).dir);
     states = {gameState, gameState, gameState};
     tic
-    while toc < 0.2/length(gameState.snake)
+    while toc < info.computingTime
         nowDir = startDir;
         for i = 1 : 3
             for j = 1 : info.depth
